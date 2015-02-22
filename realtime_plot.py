@@ -32,7 +32,7 @@ class RealtimePlotter(object):
     to prevent blocking / slowdown.
     '''
 
-    def _bozo(self, nrows, propvals, propname, dflt):
+    def _check_param(self, nrows, propvals, propname, dflt):
         retval = [dflt]*nrows
         if propvals:
             if len(propvals) != nrows:
@@ -45,7 +45,8 @@ class RealtimePlotter(object):
 
         self.is_open = False
 
-    def __init__(self, ylims, size=100, window_name=None, styles=None, ylabels=None, interval_msec=10):
+    def __init__(self, ylims, size=100, 
+            window_name=None, styles=None, ylabels=None, yticks=[], interval_msec=20):
         '''
         Initializes a multi-plot with specified Y-axis limits as a list of pairs; e.g., 
         [(-1,+1), (0.,5)].  Optional parameters are:
@@ -54,6 +55,7 @@ class RealtimePlotter(object):
         window_name   name to display at the top of the figure
         styles        plot styles (e.g., 'b-', 'r.')
         ylabels       Y-axis labels
+        yticks        Y-axis tick / grid positions
         interval_msec animation update in milliseconds
         '''
 
@@ -61,8 +63,9 @@ class RealtimePlotter(object):
         nrows = len(ylims)
 
         # Bozo filters
-        styles = self._bozo(nrows, styles, 'styles', 'b-')
-        ylabels = self._bozo(nrows, ylabels, 'ylabels', '')
+        styles  = self._check_param(nrows, styles, 'styles', 'b-')
+        ylabels = self._check_param(nrows, ylabels, 'ylabels', '')
+        yticks  = self._check_param(nrows, yticks, 'yticks', [])
 
         # Set up subplots
         self.fig, axes = plt.subplots(nrows)
@@ -86,6 +89,10 @@ class RealtimePlotter(object):
         # Set axis limits
         [ax.set_xlim((0,size)) for ax in axes]
         [ax.set_ylim(ylim) for ax,ylim in zip(axes,ylims)]
+
+        # Set ticks and gridlines
+        [ax.yaxis.set_ticks(ytick) for ax,ytick in zip(axes,yticks)]
+        [ax.yaxis.grid(True if yticks else False) for ax in axes]
 
         # Set X same for all lines
         [line.set_xdata(self.x) for line in self.lines]
