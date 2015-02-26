@@ -129,8 +129,11 @@ class _SinePlotter(RealtimePlotter):
 
     def __init__(self):
 
-        RealtimePlotter.__init__(self, [(-1,+1), (-1,+1)], window_name='Sinewave demo',
-                styles = ['r-', 'b-'], ylabels=['Slow', 'Fast'])
+        RealtimePlotter.__init__(self, [(-1,+1), (-1,+1)], 
+                window_name='Sinewave demo',
+                yticks = [(-1,0,+1),(-1,0,+1)],
+                styles = ['r-', 'b-'], 
+                ylabels=['Slow', 'Fast'])
 
         self.xcurr = 0
 
