@@ -110,7 +110,10 @@ class RealtimePlotter(object):
         '''
 
         ani = animation.FuncAnimation(self.fig, self._animate, interval=self.interval_msec, blit=True)
-        plt.show()
+        try:
+            plt.show()
+        except:
+            pass
   
     def getValues(self):
         '''
