@@ -24,6 +24,7 @@ class _SinePlotter(RealtimePlotter):
     def __init__(self):
 
         RealtimePlotter.__init__(self, [(-1,+1), (-1,+1)], 
+                extra=True,
                 window_name='Sinewave demo',
                 yticks = [(-1,0,+1),(-1,0,+1)],
                 styles = ['r--', 'b-'], 
@@ -33,13 +34,18 @@ class _SinePlotter(RealtimePlotter):
 
     def getValues(self):
 
-        return self._getRow(1), self._getRow(2)
+        s = self._getRow(1)
+        c = self._getRow(2)
+
+        return  s,c, s, c
 
     def _getRow(self, row):
 
         size = len(self.x)
+
+        angle = 2*np.pi*(float(self.xcurr)%size)/size
         
-        return np.sin(row*2*np.pi*(float(self.xcurr)%size)/size)
+        return np.sin(angle) if row == 2 else np.cos(angle)
 
 
 def _update(plotter):

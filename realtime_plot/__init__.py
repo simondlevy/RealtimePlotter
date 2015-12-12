@@ -46,13 +46,14 @@ class RealtimePlotter(object):
 
         self.is_open = False
 
-    def __init__(self, ylims, size=100, 
+    def __init__(self, ylims, size=100, extra=False,
             window_name=None, styles=None, ylabels=None, yticks=[], interval_msec=20):
         '''
         Initializes a multi-plot with specified Y-axis limits as a list of pairs; e.g., 
         [(-1,+1), (0.,5)].  Optional parameters are:
        
         size             size of display (X axis) in arbitrary time steps
+        extra            flag for showing extra square plot on left
         window_name      name to display at the top of the figure
         styles           plot styles (e.g., 'b-', 'r.'; default='b-')
         yticks           Y-axis tick / grid positions
@@ -67,18 +68,30 @@ class RealtimePlotter(object):
         ylabels = self._check_param(nrows, ylabels, 'ylabels', '')
         yticks  = self._check_param(nrows, yticks, 'yticks', [])
 
+        self.fig = plt.gcf()
+
+        # X values are arbitrary ascending; Y is initially zero
+        self.x = np.arange(0, size)
+        y = np.zeros(size)
+
         # Set up subplots
-        self.fig, self.axes = plt.subplots(nrows)
+        self.axes = [None]*nrows
+        ncols = 2 if extra else 1
+        self.side = None
+        if extra:
+            self.side = plt.subplot(1,2,1)
+            self.side.set_aspect('equal')
+            self.sideline = self.side.plot(y, y, animated=True)
+            self.side.set_xlim(-1, +1)
+            self.side.set_ylim(-1, +1)
+        for k in range(nrows):
+            self.axes[k] = plt.subplot(nrows, ncols, ncols*(k+1))
         if window_name:
             self.fig.canvas.set_window_title(window_name)
 
         # Set up handler for window-close events
         self.fig.canvas.mpl_connect('close_event', self._handle_close)
         self.is_open = True
-
-        # X values are arbitrary ascending; Y is initially zero
-        self.x = np.arange(0, size)
-        y = np.zeros(size)
 
         # Create lines
         self.lines = [ax.plot(self.x, y, style, animated=True)[0] for ax,style in zip(self.axes,styles)]
@@ -137,7 +150,6 @@ class RealtimePlotter(object):
         Hides the baseline for the specified row of this multi-plot.
         '''
 
-
         self._axis_check(axid)
 
         self.baseflags[axid] = False
@@ -152,7 +164,9 @@ class RealtimePlotter(object):
 
     def _animate(self, t):
 
-        yvals = self.getValues()
+        values = self.getValues()
+
+        yvals = values[2:] if self.side else values
 
         for row, line in enumerate(self.lines, start=1):
             ydata = line.get_ydata()
@@ -160,7 +174,18 @@ class RealtimePlotter(object):
             ydata[-1] = yvals[row-1]
             line.set_ydata(ydata)
 
-        return self.lines + [baseline for baseline,flag in zip(self.baselines,self.baseflags) if flag]
+        if self.side:
+            sideline = self.sideline[0]
+            xdata = sideline.get_xdata()
+            xdata = np.roll(xdata, -1)
+            xdata[-1] = values[0]
+            ydata = sideline.get_ydata()
+            ydata = np.roll(ydata, -1)
+            ydata[-1] = values[1]
+            sideline.set_xdata(xdata)
+            sideline.set_ydata(ydata)
+
+        return self.sideline + self.lines + [baseline for baseline,flag in zip(self.baselines,self.baseflags) if flag]
 
 # Simple example with threading
 
