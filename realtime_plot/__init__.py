@@ -163,18 +163,19 @@ class RealtimePlotter(object):
             raise Exception('Axis index must be in [0,%d)' % nrows)
 
     @classmethod
+    def roll(cls, getter, setter, line, newval):
+        data = getter(line)
+        data = np.roll(data, -1)
+        data[-1] = newval
+        setter(data)
+
+    @classmethod
     def rollx(cls, line, newval):
-        ydata = line.get_ydata()
-        ydata = np.roll(ydata, -1)
-        ydata[-1] = newval
-        line.set_ydata(ydata)
+        RealtimePlotter.roll(line.get_xdata, line.set_xdata, line, newval)
 
     @classmethod
     def rolly(cls, line, newval):
-        xdata = line.get_xdata()
-        xdata = np.roll(xdata, -1)
-        xdata[-1] = newval
-        line.set_xdata(xdata)
+        RealtimePlotter.roll(line.get_ydata, line.set_ydata, line, newval)
 
     def _animate(self, t):
 
