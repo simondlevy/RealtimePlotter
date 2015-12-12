@@ -46,14 +46,14 @@ class RealtimePlotter(object):
 
         self.is_open = False
 
-    def __init__(self, ylims, size=100, extra=False,
+    def __init__(self, ylims, size=100, phaselims=None,
             window_name=None, styles=None, ylabels=None, yticks=[], interval_msec=20):
         '''
         Initializes a multi-plot with specified Y-axis limits as a list of pairs; e.g., 
         [(-1,+1), (0.,5)].  Optional parameters are:
        
         size             size of display (X axis) in arbitrary time steps
-        extra            flag for showing extra square plot on left
+        phaselims        xlim,ylim for phase plot
         window_name      name to display at the top of the figure
         styles           plot styles (e.g., 'b-', 'r.'; default='b-')
         yticks           Y-axis tick / grid positions
@@ -76,14 +76,14 @@ class RealtimePlotter(object):
 
         # Set up subplots
         self.axes = [None]*nrows
-        ncols = 2 if extra else 1
+        ncols = 2 if phaselims else 1
         self.sideline = None
-        if extra:
+        if phaselims:
             side = plt.subplot(1,2,1)
             side.set_aspect('equal')
             self.sideline = side.plot(y, y, animated=True)
-            side.set_xlim(-1, +1)  # XXX should be a param
-            side.set_ylim(-1, +1)
+            side.set_xlim(phaselims[0])
+            side.set_ylim(phaselims[1])
         for k in range(nrows):
             self.axes[k] = plt.subplot(nrows, ncols, ncols*(k+1))
         if window_name:
