@@ -162,6 +162,20 @@ class RealtimePlotter(object):
 
             raise Exception('Axis index must be in [0,%d)' % nrows)
 
+    @classmethod
+    def rollx(cls, line, newval):
+        ydata = line.get_ydata()
+        ydata = np.roll(ydata, -1)
+        ydata[-1] = newval
+        line.set_ydata(ydata)
+
+    @classmethod
+    def rolly(cls, line, newval):
+        xdata = line.get_xdata()
+        xdata = np.roll(xdata, -1)
+        xdata[-1] = newval
+        line.set_xdata(xdata)
+
     def _animate(self, t):
 
         values = self.getValues()
@@ -169,21 +183,12 @@ class RealtimePlotter(object):
         yvals = values[2:] if self.sideline else values
 
         for row, line in enumerate(self.lines, start=1):
-            ydata = line.get_ydata()
-            ydata = np.roll(ydata, -1)
-            ydata[-1] = yvals[row-1]
-            line.set_ydata(ydata)
+            RealtimePlotter.rolly(line, yvals[row-1])
 
         if self.sideline:
             sideline = self.sideline[0]
-            xdata = sideline.get_xdata()
-            xdata = np.roll(xdata, -1)
-            xdata[-1] = values[0]
-            ydata = sideline.get_ydata()
-            ydata = np.roll(ydata, -1)
-            ydata[-1] = values[1]
-            sideline.set_xdata(xdata)
-            sideline.set_ydata(ydata)
+            RealtimePlotter.rollx(sideline, values[0])
+            RealtimePlotter.rolly(sideline, values[1])
 
         return self.sideline + self.lines + [baseline for baseline,flag in zip(self.baselines,self.baseflags) if flag]
 
