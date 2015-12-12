@@ -77,13 +77,13 @@ class RealtimePlotter(object):
         # Set up subplots
         self.axes = [None]*nrows
         ncols = 2 if extra else 1
-        self.side = None
+        self.sideline = None
         if extra:
-            self.side = plt.subplot(1,2,1)
-            self.side.set_aspect('equal')
-            self.sideline = self.side.plot(y, y, animated=True)
-            self.side.set_xlim(-1, +1)
-            self.side.set_ylim(-1, +1)
+            side = plt.subplot(1,2,1)
+            side.set_aspect('equal')
+            self.sideline = side.plot(y, y, animated=True)
+            side.set_xlim(-1, +1)  # XXX should be a param
+            side.set_ylim(-1, +1)
         for k in range(nrows):
             self.axes[k] = plt.subplot(nrows, ncols, ncols*(k+1))
         if window_name:
@@ -166,7 +166,7 @@ class RealtimePlotter(object):
 
         values = self.getValues()
 
-        yvals = values[2:] if self.side else values
+        yvals = values[2:] if self.sideline else values
 
         for row, line in enumerate(self.lines, start=1):
             ydata = line.get_ydata()
@@ -174,7 +174,7 @@ class RealtimePlotter(object):
             ydata[-1] = yvals[row-1]
             line.set_ydata(ydata)
 
-        if self.side:
+        if self.sideline:
             sideline = self.sideline[0]
             xdata = sideline.get_xdata()
             xdata = np.roll(xdata, -1)
