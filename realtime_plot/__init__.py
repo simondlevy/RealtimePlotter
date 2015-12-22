@@ -191,7 +191,9 @@ class RealtimePlotter(object):
             RealtimePlotter.rollx(sideline, values[0])
             RealtimePlotter.rolly(sideline, values[1])
 
-        return self.sideline + self.lines + [baseline for baseline,flag in zip(self.baselines,self.baseflags) if flag]
+        return (self.sideline if self.sideline != None else []) + \
+                   self.lines + [baseline for baseline,flag in zip(self.baselines,self.baseflags) if flag]
+
 
 # Simple example with threading
 
