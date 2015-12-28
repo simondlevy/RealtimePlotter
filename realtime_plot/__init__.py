@@ -81,7 +81,7 @@ class RealtimePlotter(object):
         if phaselims:
             side = plt.subplot(1,2,1)
             side.set_aspect('equal')
-            self.sideline = side.plot(y, y, animated=True)
+            self.sideline = side.plot(y, y, 'o', animated=True)
             side.set_xlim(phaselims[0])
             side.set_ylim(phaselims[1])
         for k in range(nrows):
