@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 '''
-Real-time plot demo using sine waves.
+Real-time plot demo using overlain sine waves.
 
-Copyright (C) 2015 Simon D. Levy
+Copyright (C) 2016 Simon D. Levy
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as
@@ -23,11 +23,11 @@ class _SinePlotter(RealtimePlotter):
 
     def __init__(self):
 
-        RealtimePlotter.__init__(self, [(-1,+1), (-1,+1)], 
+        RealtimePlotter.__init__(self, [(-1,+1)], 
                 window_name='Sinewave demo',
-                yticks = [(-1,0,+1),(-1,0,+1)],
-                styles = ['r--', 'b-'], 
-                ylabels=['Slow', 'Fast'])
+                yticks = [(-1,0,+1)],
+                styles = [('r--', 'b-')], 
+                ylabels=['Sine'])
 
         self.xcurr = 0
 
@@ -39,7 +39,7 @@ class _SinePlotter(RealtimePlotter):
 
         size = len(self.x)
         
-        return np.sin(2*k*np.pi*(float(self.xcurr)%size)/size)
+        return np.sin(k*np.pi*(float(self.xcurr)%size)/size)
 
 
 def _update(plotter):

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 Real-time scrolling multi-plot over time.
 
@@ -58,6 +57,8 @@ class RealtimePlotter(object):
         styles           plot styles (e.g., 'b-', 'r.'; default='b-')
         yticks           Y-axis tick / grid positions
         interval_msec    animation update in milliseconds
+
+        For overlaying plots, use a tuple for styles; e.g., styles=[('r','g'), 'b']
         '''
 
         # Row count is provided by Y-axis limits
@@ -94,7 +95,11 @@ class RealtimePlotter(object):
         self.is_open = True
 
         # Create lines
-        self.lines = [ax.plot(self.x, y, style, animated=True)[0] for ax,style in zip(self.axes,styles)]
+        self.lines = []
+        for j in range(len(styles)):
+            stylesForRow = styles[j] if type(styles[j]) == tuple else [styles[j]]
+            for style in stylesForRow:
+                self.lines.append(self.axes[j].plot(self.x, y, style, animated=True)[0])
 
         # Create baselines, initially hidden
         self.baselines = [ax.plot(self.x, y, 'k', animated=True)[0] for ax in self.axes]
@@ -193,51 +198,3 @@ class RealtimePlotter(object):
 
         return (self.sideline if self.sideline != None else []) + \
                    self.lines + [baseline for baseline,flag in zip(self.baselines,self.baseflags) if flag]
-
-
-# Simple example with threading
-
-class _SinePlotter(RealtimePlotter):
-
-    def __init__(self):
-
-        RealtimePlotter.__init__(self, [(-1,+1), (-1,+1)], 
-                window_name='Sinewave demo',
-                yticks = [(-1,0,+1),(-1,0,+1)],
-                styles = ['r--', 'b-'], 
-                ylabels=['Slow', 'Fast'])
-
-        self.xcurr = 0
-
-    def getValues(self):
-
-        return self._getRow(1), self._getRow(2)
-
-    def _getRow(self, row):
-
-        size = len(self.x)
-        
-        return np.sin(row*2*np.pi*(float(self.xcurr)%size)/size)
-
-
-def _update(plotter):
-
-    from time import sleep
-
-    while True:
-
-        plotter.xcurr += 1
-        sleep(.002)
-
-if __name__ == '__main__':
-
-    import threading
-
-    plotter = _SinePlotter()
-
-    thread = threading.Thread(target=_update, args = (plotter,))
-    thread.daemon = True
-    thread.start()
-
-    plotter.start()
- 
