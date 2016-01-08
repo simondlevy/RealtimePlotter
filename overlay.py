@@ -24,22 +24,22 @@ class _SinePlotter(RealtimePlotter):
     def __init__(self):
 
         RealtimePlotter.__init__(self, [(-1,+1)], 
-                window_name='Sinewave demo',
+                window_name='Sine and Cosine',
                 yticks = [(-1,0,+1)],
                 styles = [('r--', 'b-')], 
-                ylabels=['Sine'])
+                ylabels=['sin(x), cos(x)'])
 
         self.xcurr = 0
 
     def getValues(self):
 
-        return self._getWave(1), self._getWave(2)
+        return self._getWave(np.sin), self._getWave(np.cos)
 
-    def _getWave(self, k):
+    def _getWave(self, fun):
 
         size = len(self.x)
         
-        return np.sin(k*np.pi*(float(self.xcurr)%size)/size)
+        return fun(2*np.pi*(float(self.xcurr)%size)/size)
 
 
 def _update(plotter):
