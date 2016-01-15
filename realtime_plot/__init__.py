@@ -98,7 +98,6 @@ class RealtimePlotter(object):
 
         # Create lines
         self.lines = []
-        print(self.legends)
         for j in range(len(styles)):
             stylesForRow = styles[j] if type(styles[j]) == tuple else [styles[j]]
             ax = self.axes[j]
