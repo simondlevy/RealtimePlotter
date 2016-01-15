@@ -26,8 +26,8 @@ class _SinePlotter(RealtimePlotter):
         RealtimePlotter.__init__(self, [(-1,+1)], 
                 window_name='Sine and Cosine',
                 yticks = [(-1,0,+1)],
-                styles = [('r--', 'b-')], 
-                ylabels=['sin(x), cos(x)'])
+                styles = [('r--', 'b-')],
+                legends = [('sin', 'cos')])
 
         self.xcurr = 0
 

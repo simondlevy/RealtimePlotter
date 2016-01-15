@@ -46,7 +46,7 @@ class RealtimePlotter(object):
         self.is_open = False
 
     def __init__(self, ylims, size=100, phaselims=None,
-            window_name=None, styles=None, ylabels=None, yticks=[], interval_msec=20):
+            window_name=None, styles=None, ylabels=None, yticks=[], legends=[], interval_msec=20):
         '''
         Initializes a multi-plot with specified Y-axis limits as a list of pairs; e.g., 
         [(-1,+1), (0.,5)].  Optional parameters are:
@@ -56,6 +56,7 @@ class RealtimePlotter(object):
         window_name      name to display at the top of the figure
         styles           plot styles (e.g., 'b-', 'r.'; default='b-')
         yticks           Y-axis tick / grid positions
+        legends          list of legends for each subplot
         interval_msec    animation update in milliseconds
 
         For overlaying plots, use a tuple for styles; e.g., styles=[('r','g'), 'b']
@@ -68,6 +69,7 @@ class RealtimePlotter(object):
         styles  = self._check_param(nrows, styles, 'styles', 'b-')
         ylabels = self._check_param(nrows, ylabels, 'ylabels', '')
         yticks  = self._check_param(nrows, yticks, 'yticks', [])
+        self.legends  = self._check_param(nrows, legends, 'legends', [])
 
         self.fig = plt.gcf()
 
@@ -96,10 +98,16 @@ class RealtimePlotter(object):
 
         # Create lines
         self.lines = []
+        print(self.legends)
         for j in range(len(styles)):
             stylesForRow = styles[j] if type(styles[j]) == tuple else [styles[j]]
-            for style in stylesForRow:
-                self.lines.append(self.axes[j].plot(self.x, y, style, animated=True)[0])
+            ax = self.axes[j]
+            havelegend = len(self.legends[j]) > 0
+            for k in range(len(stylesForRow)):
+                label = self.legends[j][k] if havelegend else ''
+                self.lines.append(ax.plot(self.x, y, stylesForRow[k], animated=True, label=label)[0])
+            if havelegend:
+                ax.legend()
 
         # Create baselines, initially hidden
         self.baselines = [ax.plot(self.x, y, 'k', animated=True)[0] for ax in self.axes]
