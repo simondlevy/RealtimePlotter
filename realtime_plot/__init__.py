@@ -98,13 +98,15 @@ class RealtimePlotter(object):
 
         # Create lines
         self.lines = []
-        for style,legend,ax in zip(styles,self.legends,self.axes):
+        for j in range(len(styles)):
+            style = styles[j]
+            ax = self.axes[j]
+            legend = self.legends[j] if len(self.legends) > 0 else None
             stylesForRow = style if type(style) == tuple else [style]
-            havelegend = legend != None
             for k in range(len(stylesForRow)):
-                label = legend[k] if havelegend else ''
+                label = legend[k] if len(legend) > 0 else ''
                 self.lines.append(ax.plot(self.x, y, stylesForRow[k], animated=True, label=label)[0])
-            if havelegend:
+            if legend != None:
                 ax.legend()
 
         # Create baselines, initially hidden
