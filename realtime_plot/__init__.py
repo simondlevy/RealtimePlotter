@@ -106,7 +106,7 @@ class RealtimePlotter(object):
             for k in range(len(stylesForRow)):
                 label = legend[k] if len(legend) > 0 else ''
                 self.lines.append(ax.plot(self.x, y, stylesForRow[k], animated=True, label=label)[0])
-            if legend != None:
+            if legend != None and len(legend) > 0:
                 ax.legend()
 
         # Create baselines, initially hidden
