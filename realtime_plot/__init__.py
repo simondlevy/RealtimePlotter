@@ -100,7 +100,7 @@ class RealtimePlotter(object):
         self.lines = []
         for style,legend,ax in zip(styles,self.legends,self.axes):
             stylesForRow = style if type(style) == tuple else [style]
-            havelegend = len(legend) > 0
+            havelegend = legend != None
             for k in range(len(stylesForRow)):
                 label = legend[k] if havelegend else ''
                 self.lines.append(ax.plot(self.x, y, stylesForRow[k], animated=True, label=label)[0])
