@@ -41,7 +41,11 @@ class RealtimePlotter(object):
                 retval = propvals
         return retval
 
-    def _handle_close(self, event):
+    def handleClose(self, event):
+        '''
+        Automatically called when user closes plot window.
+        Override to do you own shutdown.
+        '''
 
         self.is_open = False
 
@@ -93,7 +97,7 @@ class RealtimePlotter(object):
             self.fig.canvas.set_window_title(window_name)
 
         # Set up handler for window-close events
-        self.fig.canvas.mpl_connect('close_event', self._handle_close)
+        self.fig.canvas.mpl_connect('close_event', self.handleClose)
         self.is_open = True
 
         # Create lines
