@@ -28,7 +28,7 @@ class _SinePlotter(RealtimePlotter):
                 window_name='Sinewave demo',
                 yticks = [(-1,0,+1),(-1,0,+1)],
                 styles = ['r--', 'b-'], 
-                ylabels=['Slow', 'Fast'])
+                ylabels=['Sin', 'Cos'])
 
         self.xcurr = 0
 
