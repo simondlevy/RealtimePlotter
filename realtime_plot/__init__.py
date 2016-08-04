@@ -4,9 +4,6 @@ Real-time scrolling multi-plot over time.
 Requires: matplotlib
           numpy
 
-Demo:
-         python realtime_plot.py
-
 Adapted from example in http://stackoverflow.com/questions/8955869/why-is-plotting-with-matplotlib-so-slow
 
 Copyright (C) 2015 Simon D. Levy
