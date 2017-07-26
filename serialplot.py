@@ -17,7 +17,6 @@ GNU General Public License for more details.
 
 from serial import Serial
 from realtime_plot import RealtimePlotter
-from time import sleep
 from threading import Thread
 
 # Change these to suit your needs
@@ -61,9 +60,6 @@ def _update(plotter):
             msg += c
 
         plotter.xcurr += 1
-
-        sleep(.002)
-
 
 if __name__ == '__main__':
 
