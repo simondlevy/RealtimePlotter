@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''
 Real-time plot demo using serial input
 
@@ -22,7 +22,7 @@ from threading import Thread
 # Change these to suit your needs
 PORT = '/dev/ttyACM0'
 BAUD = 115200
-RANGE = (0,10000)
+RANGE = (-1,+1)
 
 class SerialPlotter(RealtimePlotter):
 
@@ -48,11 +48,11 @@ def _update(plotter):
 
     while True:
 
-        c = port.read()
+        c = port.read().decode()
 
         if c == '\n':
             try:
-                plotter.ycurr = int(msg)
+                plotter.ycurr = float(msg)
             except:
                 pass
             msg = ''
