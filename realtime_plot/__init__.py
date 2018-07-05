@@ -90,8 +90,7 @@ class RealtimePlotter(object):
             side.set_ylim(phaselims[1])
         for k in range(nrows):
             self.axes[k] = plt.subplot(nrows, ncols, ncols*(k+1))
-        if window_name:
-            self.fig.canvas.set_window_title(window_name)
+        self.window_name = 'RealtimePlotter' if window_name is None else window_name
 
         # Set up handler for window-close events
         self.fig.canvas.mpl_connect('close_event', self.handleClose)
@@ -197,9 +196,11 @@ class RealtimePlotter(object):
 
         if values is None:
 
-            print('Waiting for data ...')
+            self.fig.canvas.set_window_title('Waiting for data ...')
 
         else:
+
+            self.fig.canvas.set_window_title(self.window_name)
 
             yvals = values[2:] if self.sideline else values
 
