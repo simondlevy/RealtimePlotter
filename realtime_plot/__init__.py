@@ -195,15 +195,21 @@ class RealtimePlotter(object):
 
         values = self.getValues()
 
-        yvals = values[2:] if self.sideline else values
+        if values is None:
 
-        for row, line in enumerate(self.lines, start=1):
-            RealtimePlotter.rolly(line, yvals[row-1])
+            print('Waiting for data ...')
 
-        if self.sideline:
-            sideline = self.sideline[0]
-            RealtimePlotter.rollx(sideline, values[0])
-            RealtimePlotter.rolly(sideline, values[1])
+        else:
+
+            yvals = values[2:] if self.sideline else values
+
+            for row, line in enumerate(self.lines, start=1):
+                RealtimePlotter.rolly(line, yvals[row-1])
+
+            if self.sideline:
+                sideline = self.sideline[0]
+                RealtimePlotter.rollx(sideline, values[0])
+                RealtimePlotter.rolly(sideline, values[1])
 
         return (self.sideline if self.sideline != None else []) + \
                    self.lines + [baseline for baseline,flag in zip(self.baselines,self.baseflags) if flag]
