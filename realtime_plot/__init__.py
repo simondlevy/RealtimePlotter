@@ -22,7 +22,6 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 
-
 class RealtimePlotter(object):
     '''
     Real-time scrolling multi-plot over time.  Your data-acquisition code should run on its own thread,
@@ -46,7 +45,7 @@ class RealtimePlotter(object):
 
         self.is_open = False
 
-    def __init__(self, ylims, size=100, phaselims=None,
+    def __init__(self, ylims, size=100, phaselims=None, show_yvals=False,
             window_name=None, styles=None, ylabels=None, yticks=[], legends=[], interval_msec=20):
         '''
         Initializes a multi-plot with specified Y-axis limits as a list of pairs; e.g., 
@@ -54,6 +53,7 @@ class RealtimePlotter(object):
        
         size             size of display (X axis) in arbitrary time steps
         phaselims        xlim,ylim for phase plot
+        show_yvals       display Y values in plot if True
         window_name      name to display at the top of the figure
         styles           plot styles (e.g., 'b-', 'r.'; default='b-')
         yticks           Y-axis tick / grid positions
@@ -129,6 +129,10 @@ class RealtimePlotter(object):
 
         # Allow interval specification
         self.interval_msec = interval_msec
+
+        # Add axis text if indicated
+        self.axis_texts = [axis.text(0.8, ylim[1]-.1*(ylim[1]-ylim[0]), '') for axis,ylim in zip(self.axes, ylims)] \
+                if show_yvals else []
 
     def start(self):
         '''
@@ -206,6 +210,9 @@ class RealtimePlotter(object):
 
             yvals = values[2:] if self.sideline else values
 
+            for k, text in enumerate(self.axis_texts):
+                text.set_text('%f'%yvals[k])
+
             for row, line in enumerate(self.lines, start=1):
                 RealtimePlotter.rolly(line, yvals[row-1])
 
@@ -214,5 +221,9 @@ class RealtimePlotter(object):
                 RealtimePlotter.rollx(sideline, values[0])
                 RealtimePlotter.rolly(sideline, values[1])
 
+         
+         
+        # Animation function must return everything we want to animate
         return (self.sideline if self.sideline != None else []) + \
-                   self.lines + [baseline for baseline,flag in zip(self.baselines,self.baseflags) if flag]
+               self.lines + [baseline for baseline,flag in zip(self.baselines,self.baseflags) if flag] + \
+               self.axis_texts
