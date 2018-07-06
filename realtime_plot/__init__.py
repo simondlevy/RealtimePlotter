@@ -110,22 +110,22 @@ class RealtimePlotter(object):
                 ax.legend()
 
         # Create baselines, initially hidden
-        self.baselines = [ax.plot(self.x, y, 'k', animated=True)[0] for ax in self.axes]
+        self.baselines = [axis.plot(self.x, y, 'k', animated=True)[0] for axis in self.axes]
         self.baseflags = [False]*nrows
 
         # Add properties as specified
-        [ax.set_ylabel(ylabel) for ax, ylabel in zip(self.axes, ylabels)]
+        [axis.set_ylabel(ylabel) for axis, ylabel in zip(self.axes, ylabels)]
 
         # Set axis limits
-        [ax.set_xlim((0,size)) for ax in self.axes]
-        [ax.set_ylim(ylim) for ax,ylim in zip(self.axes,ylims)]
+        [axis.set_xlim((0,size)) for axis in self.axes]
+        [axis.set_ylim(ylim) for axis,ylim in zip(self.axes,ylims)]
 
         # Set ticks and gridlines
-        [ax.yaxis.set_ticks(ytick) for ax,ytick in zip(self.axes,yticks)]
-        [ax.yaxis.grid(True if yticks else False) for ax in self.axes]
+        [axis.yaxis.set_ticks(ytick) for axis,ytick in zip(self.axes,yticks)]
+        [axis.yaxis.grid(True if yticks else False) for axis in self.axes]
 
-        # XXX Hide X axis ticks and labels for now
-        [ax.xaxis.set_visible(False) for ax in self.axes]
+        # Hide X axis ticks and labels for now
+        [axis.xaxis.set_visible(False) for axis in self.axes]
 
         # Allow interval specification
         self.interval_msec = interval_msec
@@ -135,7 +135,9 @@ class RealtimePlotter(object):
         Starts the realtime plotter.
         '''
 
+        # If we don't assign the result of the function, we won't see anything!
         ani = animation.FuncAnimation(self.fig, self._animate, interval=self.interval_msec, blit=True)
+
         try:
             plt.show()
         except:

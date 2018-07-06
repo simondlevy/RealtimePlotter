@@ -15,7 +15,7 @@ GNU General Public License for more details.
 '''
 
 
-from serial import Serial
+import serial
 from realtime_plot import RealtimePlotter
 from threading import Thread
 
@@ -40,9 +40,7 @@ class SerialPlotter(RealtimePlotter):
 
          return (self.ycurr,)
 
-def _update(plotter):
-
-    port = Serial(PORT, BAUD)
+def _update(port, plotter):
 
     msg = ''
 
@@ -63,10 +61,15 @@ def _update(plotter):
 
 if __name__ == '__main__':
 
+    try:
+        port = serial.Serial(PORT, BAUD)
+    except serial.SerialException:
+        print('Unable to access device on port %s' % PORT)
+        exit(1)
 
     plotter = SerialPlotter()
 
-    thread = Thread(target=_update, args = (plotter,))
+    thread = Thread(target=_update, args = (port, plotter))
     thread.daemon = True
     thread.start()
 
