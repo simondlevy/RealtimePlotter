@@ -211,7 +211,7 @@ class RealtimePlotter(object):
             yvals = values[2:] if self.sideline else values
 
             for k, text in enumerate(self.axis_texts):
-                text.set_text('%f'%yvals[k])
+                text.set_text('%+f'%yvals[k])
 
             for row, line in enumerate(self.lines, start=1):
                 RealtimePlotter.rolly(line, yvals[row-1])
