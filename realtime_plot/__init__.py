@@ -205,9 +205,10 @@ class RealtimePlotter(object):
             self.fig.canvas.set_window_title('Waiting for data ...')
 
         else:
-
-            self.fig.canvas.set_window_title(self.window_name)
-
+            try:
+                self.fig.canvas.set_window_title(self.window_name)
+            except AttributeError:
+                self.fig.suptitle(self.window_name)
             yvals = values[2:] if self.sideline else values
 
             for k, text in enumerate(self.axis_texts):
