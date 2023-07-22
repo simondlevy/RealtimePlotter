@@ -202,11 +202,11 @@ class RealtimePlotter(object):
 
         if values is None:
 
-            self.fig.canvas.set_window_title('Waiting for data ...')
+            self.fig.canvas.manager.set_window_title('Waiting for data ...')
 
         else:
 
-            self.fig.canvas.set_window_title(self.window_name)
+            self.fig.canvas.manager.set_window_title(self.window_name)
 
             yvals = values[2:] if self.sideline else values
 
