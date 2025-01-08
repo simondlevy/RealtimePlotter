@@ -140,7 +140,7 @@ class RealtimePlotter(object):
         '''
 
         # If we don't assign the result of the function, we won't see anything!
-        ani = animation.FuncAnimation(self.fig, self._animate, interval=self.interval_msec, blit=True)
+        ani = animation.FuncAnimation(self.fig, self._animate, interval=self.interval_msec, blit=True, cache_frame_data=False)
 
         try:
             plt.show()
