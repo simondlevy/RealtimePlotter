@@ -1,11 +1,6 @@
 '''
 Real-time scrolling multi-plot over time.
 
-Requires: matplotlib
-          numpy
-
-Adapted from example in http://stackoverflow.com/questions/8955869/why-is-plotting-with-matplotlib-so-slow
-
 Copyright (C) 2015 Simon D. Levy
 
 This program is free software: you can redistribute it and/or modify
@@ -22,17 +17,19 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 
+
 class RealtimePlotter(object):
     '''
-    Real-time scrolling multi-plot over time.  Your data-acquisition code should run on its own thread,
-    to prevent blocking / slowdown.
+    Real-time scrolling multi-plot over time.  Your data-acquisition code
+    should run on its own thread, to prevent blocking / slowdown.
     '''
 
     def _check_param(self, nrows, propvals, propname, dflt):
         retval = [dflt]*nrows
         if propvals:
             if len(propvals) != nrows:
-                raise Exception('Provided %d ylims but %d %s' % (nrows, len(propvals), propname))
+                raise Exception('Provided %d ylims but %d %s' %
+                                (nrows, len(propvals), propname))
             else:
                 retval = propvals
         return retval
@@ -46,11 +43,12 @@ class RealtimePlotter(object):
         self.is_open = False
 
     def __init__(self, ylims, size=100, phaselims=None, show_yvals=False,
-            window_name=None, styles=None, ylabels=None, yticks=[], legends=[], interval_msec=20):
+                 window_name=None, styles=None, ylabels=None, yticks=[],
+                 legends=[], interval_msec=20):
         '''
-        Initializes a multi-plot with specified Y-axis limits as a list of pairs; e.g., 
-        [(-1,+1), (0.,5)].  Optional parameters are:
-       
+        Initializes a multi-plot with specified Y-axis limits as a list of
+        pairs; e.g., [(-1,+1), (0.,5)].  Optional parameters are:
+
         size             size of display (X axis) in arbitrary time steps
         phaselims        xlim,ylim for phase plot
         show_yvals       display Y values in plot if True
@@ -60,17 +58,18 @@ class RealtimePlotter(object):
         legends          list of legends for each subplot
         interval_msec    animation update in milliseconds
 
-        For overlaying plots, use a tuple for styles; e.g., styles=[('r','g'), 'b']
+        For overlaying plots, use a tuple for styles; e.g.,
+        styles=[('r','g'), 'b']
         '''
 
         # Row count is provided by Y-axis limits
         nrows = len(ylims)
 
         # Bozo filters
-        styles  = self._check_param(nrows, styles, 'styles', 'b-')
+        styles = self._check_param(nrows, styles, 'styles', 'b-')
         ylabels = self._check_param(nrows, ylabels, 'ylabels', '')
-        yticks  = self._check_param(nrows, yticks, 'yticks', [])
-        self.legends  = self._check_param(nrows, legends, 'legends', [])
+        yticks = self._check_param(nrows, yticks, 'yticks', [])
+        self.legends = self._check_param(nrows, legends, 'legends', [])
 
         self.fig = plt.gcf()
 
@@ -83,14 +82,15 @@ class RealtimePlotter(object):
         ncols = 2 if phaselims else 1
         self.sideline = None
         if phaselims:
-            side = plt.subplot(1,2,1)
+            side = plt.subplot(1, 2, 1)
             side.set_aspect('equal')
             self.sideline = side.plot(y, y, 'o', animated=True)
             side.set_xlim(phaselims[0])
             side.set_ylim(phaselims[1])
         for k in range(nrows):
             self.axes[k] = plt.subplot(nrows, ncols, ncols*(k+1))
-        self.window_name = 'RealtimePlotter' if window_name is None else window_name
+        self.window_name = ('RealtimePlotter' if window_name is None
+                            else window_name)
 
         # Set up handler for window-close events
         self.fig.canvas.mpl_connect('close_event', self.handleClose)
@@ -102,26 +102,28 @@ class RealtimePlotter(object):
             style = styles[j]
             ax = self.axes[j]
             legend = self.legends[j] if len(self.legends) > 0 else None
-            stylesForRow = style if type(style) == tuple else [style]
+            stylesForRow = style if isinstance(style, tuple) else [style]
             for k in range(len(stylesForRow)):
                 label = legend[k] if legend and len(legend) > 0 else ''
-                self.lines.append(ax.plot(self.x, y, stylesForRow[k], animated=True, label=label)[0])
-            if legend != None and len(legend) > 0:
+                self.lines.append(ax.plot(self.x, y, stylesForRow[k],
+                                          animated=True, label=label)[0])
+            if legend is not None and len(legend) > 0:
                 ax.legend()
 
         # Create baselines, initially hidden
-        self.baselines = [axis.plot(self.x, y, 'k', animated=True)[0] for axis in self.axes]
+        self.baselines = [axis.plot(self.x, y, 'k', animated=True)[0]
+                          for axis in self.axes]
         self.baseflags = [False]*nrows
 
         # Add properties as specified
         [axis.set_ylabel(ylabel) for axis, ylabel in zip(self.axes, ylabels)]
 
         # Set axis limits
-        [axis.set_xlim((0,size)) for axis in self.axes]
-        [axis.set_ylim(ylim) for axis,ylim in zip(self.axes,ylims)]
+        [axis.set_xlim((0, size)) for axis in self.axes]
+        [axis.set_ylim(ylim) for axis, ylim in zip(self.axes, ylims)]
 
         # Set ticks and gridlines
-        [axis.yaxis.set_ticks(ytick) for axis,ytick in zip(self.axes,yticks)]
+        [axis.yaxis.set_ticks(ytick) for axis, ytick in zip(self.axes, yticks)]
         [axis.yaxis.grid(True if yticks else False) for axis in self.axes]
 
         # Hide X axis ticks and labels for now
@@ -131,8 +133,10 @@ class RealtimePlotter(object):
         self.interval_msec = interval_msec
 
         # Add axis text if indicated
-        self.axis_texts = [axis.text(0.8, ylim[1]-.1*(ylim[1]-ylim[0]), '') for axis,ylim in zip(self.axes, ylims)] \
-                if show_yvals else []
+        self.axis_texts = ([axis.text(0.8, ylim[1] - .1 * (ylim[1] - ylim[0]),
+                                      '')
+                           for axis, ylim in zip(self.axes, ylims)]
+                           if show_yvals else [])
 
     def start(self):
         '''
@@ -140,13 +144,15 @@ class RealtimePlotter(object):
         '''
 
         # If we don't assign the result of the function, we won't see anything!
-        ani = animation.FuncAnimation(self.fig, self._animate, interval=self.interval_msec, blit=True, cache_frame_data=False)
+        ani = animation.FuncAnimation(self.fig, self._animate,
+                                      interval=self.interval_msec, blit=True,
+                                      cache_frame_data=False)
 
         try:
             plt.show()
-        except:
+        except Exception:
             pass
-  
+
     def getValues(self):
         '''
         Override this method to return actual Y values at current time.
@@ -156,7 +162,8 @@ class RealtimePlotter(object):
 
     def showBaseline(self, axid, value):
         '''
-        Shows a baseline of specified value for specified row of this multi-plot.
+        Shows a baseline of specified value for specified row of this
+        multi-plot.
         '''
 
         self._axis_check(axid)
@@ -211,7 +218,7 @@ class RealtimePlotter(object):
             yvals = values[2:] if self.sideline else values
 
             for k, text in enumerate(self.axis_texts):
-                text.set_text('%+f'%yvals[k])
+                text.set_text('%+f' % yvals[k])
 
             for row, line in enumerate(self.lines, start=1):
                 RealtimePlotter.rolly(line, yvals[row-1])
@@ -221,9 +228,8 @@ class RealtimePlotter(object):
                 RealtimePlotter.rollx(sideline, values[0])
                 RealtimePlotter.rolly(sideline, values[1])
 
-         
-         
         # Animation function must return everything we want to animate
-        return (self.sideline if self.sideline != None else []) + \
-               self.lines + [baseline for baseline,flag in zip(self.baselines,self.baseflags) if flag] + \
-               self.axis_texts
+        return ((self.sideline if self.sideline is not None else []) +
+                self.lines + [baseline for baseline, flag in
+                              zip(self.baselines, self.baseflags) if flag] +
+                self.axis_texts)
