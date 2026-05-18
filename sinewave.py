@@ -12,10 +12,10 @@ def threadfun():
 
         sleep(0)
 
-def init():
-    line.set_ydata([np.nan] * len(x))
+#def init():
+#    line.set_ydata([np.nan] * len(x))
 
-def animate(i):
+def animate(i, line):
     line.set_ydata(np.sin(x + i / 10.0))  
 
 fig, ax = plt.subplots()
@@ -26,8 +26,16 @@ thread = Thread(target=threadfun)
 thread.daemon = True
 thread.start()
 
-ani = FuncAnimation(fig, animate, init_func=init,
-                    interval=20, blit=True, cache_frame_data=False)
+line.set_ydata([np.nan] * len(x))
+
+ani = FuncAnimation(
+        fig,
+        animate,
+        # init_func=init,
+        fargs=(line, ),
+        interval=20,
+        blit=True,
+        cache_frame_data=False)
 
 plt.show()
 
