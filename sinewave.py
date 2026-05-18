@@ -7,37 +7,37 @@ from threading import Thread
 from time import sleep
 
 def threadfun():
-
     while True:
-
         sleep(0)
 
-#def init():
-#    line.set_ydata([np.nan] * len(x))
 
-def animate(i, line):
+def animate(i, line, x):
     line.set_ydata(np.sin(x + i / 10.0))  
 
-fig, ax = plt.subplots()
-x = np.linspace(0, 2*np.pi, 1000)
-line, = ax.plot(x, np.sin(x))
+def main():
 
-thread = Thread(target=threadfun)
-thread.daemon = True
-thread.start()
+    fig, ax = plt.subplots()
+    x = np.linspace(0, 2*np.pi, 1000)
+    line, = ax.plot(x, np.sin(x))
 
-line.set_ydata([np.nan] * len(x))
+    thread = Thread(target=threadfun)
+    thread.daemon = True
+    thread.start()
 
-ani = FuncAnimation(
-        fig,
-        animate,
-        # init_func=init,
-        fargs=(line, ),
-        interval=20,
-        blit=True,
-        cache_frame_data=False)
+    line.set_ydata([np.nan] * len(x))
 
-plt.show()
+    ani = FuncAnimation(
+            fig,
+            animate,
+            fargs=(line, x),
+            interval=20,
+            blit=True,
+            cache_frame_data=False)
+
+    plt.show()
+
+
+main()
 
 
 
