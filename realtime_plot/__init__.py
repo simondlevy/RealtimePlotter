@@ -150,8 +150,8 @@ class RealtimePlotter(object):
 
         try:
             plt.show()
-        except Exception:
-            pass
+        except Exception as e:
+            print(e)
 
     def getValues(self):
         '''
@@ -193,6 +193,7 @@ class RealtimePlotter(object):
         data = getter(line)
         data = np.roll(data, -1)
         data[-1] = newval
+        line.set_ydata(data)
         setter(data)
 
     @classmethod
