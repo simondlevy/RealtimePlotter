@@ -3,7 +3,7 @@
 # RealtimePlotter
 
 This package provides a Python class that handles the tricky parts of animated
-data-plotting in real time: animation itself, as well as the threading
+data-plotting in real time: the animation itself, as well as the threading
 (asynchronous execution) required to coordinate the data aquisition with the
 animation.  As shown in this [example](slowfast.py), you pass a data-source
 object to the RealtmimePlotter constructor, along with the Y-axis limits.
