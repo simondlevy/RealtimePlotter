@@ -111,14 +111,15 @@ class RealtimePlotter:
                 self.fig, self._animate, interval=interval_msec, blit=True,
                 cache_frame_data=False)
 
-        # Set up handler for window-close events (currently unused)
+        # Set up handler for window-close events
         self.fig.canvas.mpl_connect('close_event', self._handle_close)
+
+        self.running = True
 
     def start(self):
         '''
         Starts the realtime plotter.
         '''
-
         thread = Thread(target=self._threadfun)
         thread.daemon = True
         thread.start()
@@ -134,17 +135,21 @@ class RealtimePlotter:
 
         self.lines[row].set_ydata(ydata)
 
-        if self.legend is not None:
-            plt.legend(self.legend, loc='upper right')
+        #if self.legend is not None:
+        #    plt.legend(self.legend, loc='upper right')
 
     def _threadfun(self):
 
-        while True:
-            data = self.source.read()
+        while self.running:
+
+            for row, vals in enumerate(self.source.read()):
+
+                self.set_ydata(row, vals)
+
             sleep(.01)
 
     def _handle_close(self, _):
-        pass
+        self.running = False
 
     def _animate(self, t):
         pass

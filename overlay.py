@@ -49,16 +49,18 @@ def threadfun(plotter):
 def main():
 
     plotter = RealtimePlotter(
-            DataSource,
+            DataSource(),
             ((-1, +1), ),
             window_name='Sine and Cosine',
             yticks=[(-1, 0, +1)],
             styles=('r--', 'b-'),
             legend=('sin', 'cos'))
 
+    '''
     thread = Thread(target=threadfun, args=(plotter,))
     thread.daemon = True
     thread.start()
+    '''
 
     plotter.start()
 

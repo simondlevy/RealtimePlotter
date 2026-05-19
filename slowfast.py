@@ -27,8 +27,8 @@ class DataSource:
         self.x = np.linspace(0, 2*np.pi, 100)
 
     def read(self):
-        slow = 0, np.sin(self.x + self.i/4)
-        fast = 1, np.sin(self.x + self.i)
+        slow = np.sin(self.x + self.i/4)
+        fast = np.sin(self.x + self.i)
         self.i += 1
         return slow, fast
 
@@ -56,9 +56,9 @@ def main():
             yticks=[(-1, 0, +1), (-1, 0, +1)],
             ylabels=['Slow', 'Fast'])
 
-    thread = Thread(target=threadfun, args=(plotter, ))
-    thread.daemon = True
-    thread.start()
+    #thread = Thread(target=threadfun, args=(plotter, ))
+    #thread.daemon = True
+    #thread.start()
 
     plotter.start()
 
