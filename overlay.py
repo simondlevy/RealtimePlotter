@@ -35,7 +35,7 @@ def threadfun(plotter):
 
         sleep(0.02)
 
-if __name__ == '__main__':
+def main():
 
     plotter = RealtimePlotter([(-1,+1)], 
                 window_name='Sine and Cosine',
@@ -48,4 +48,7 @@ if __name__ == '__main__':
     thread.start()
 
     plotter.start()
+
+
+main()
  
