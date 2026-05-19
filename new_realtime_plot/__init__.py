@@ -61,6 +61,9 @@ class RealtimePlotter:
         # Add properties as specified
         [axis.set_ylabel(ylabel) for axis, ylabel in zip(self.axes, ylabels)]
 
+        # Set axis limits
+        [axis.set_ylim(ylim) for axis, ylim in zip(self.axes, ylims)]
+
         self.window_name = ('RealtimePlotter' if window_name is None
                             else window_name)
 
