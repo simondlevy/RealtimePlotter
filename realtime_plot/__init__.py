@@ -138,7 +138,7 @@ class RealtimePlotter:
 
         if self.lines[row] is None:
             k = row if len(self.axes) > 1 else 0
-            self.lines[row], = self.axes[k].plot(ydata)
+            self.lines[row], = self.axes[k].plot(ydata, self.styles[row])
 
         self.lines[row].set_ydata(ydata)
 
