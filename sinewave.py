@@ -15,10 +15,9 @@ def threadfun(plotter):
 
     while True:
 
-        data = np.sin(x + i / 10.0)
- 
-        plotter.set_ydata(0, data)
-        plotter.set_ydata(1, data)
+        plotter.set_ydata(0, np.sin(x + i / 10.0))
+
+        plotter.set_ydata(1, np.sin(x + i / 2.0))
 
         i += 1
 
@@ -27,7 +26,13 @@ def threadfun(plotter):
 
 def main():
 
-    plotter = RealtimePlotter(((-1,+1), (-1,+1)))
+    plotter = RealtimePlotter(((-1,+1), (-1,+1)),
+                show_yvals=True,
+                window_name='Sinewave demo',
+                yticks = [(-1,0,+1),(-1,0,+1)],
+                styles = ['r--', 'b-'], 
+                ylabels=['Slow', 'Fast'])
+
 
     thread = Thread(target=threadfun, args=(plotter, ))
     thread.daemon = True
