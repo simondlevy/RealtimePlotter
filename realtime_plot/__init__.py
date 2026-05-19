@@ -132,34 +132,6 @@ class RealtimePlotter:
         if self.legend is not None:
             plt.legend(self.legend, loc='upper right')
 
-    def showBaseline(self, axid, value):
-        '''
-        Shows a baseline of specified value for specified row of this
-        multi-plot.
-        '''
-
-        self._axis_check(axid)
-
-        self.baselines[axid].set_ydata(value * np.ones(self.x.shape))
-        self.baseflags[axid] = True
-
-    def hideBaseline(self, axid):
-        '''
-        Hides the baseline for the specified row of this multi-plot.
-        '''
-
-        self._axis_check(axid)
-
-        self.baseflags[axid] = False
-
-    def _axis_check(self, axid):
-
-        nrows = len(self.lines)
-
-        if axid < 0 or axid >= nrows:
-
-            raise Exception('Axis index must be in [0,%d)' % nrows)
-
     def _animate(self, t):
 
         return
