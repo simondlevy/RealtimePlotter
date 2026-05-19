@@ -34,21 +34,6 @@ def main():
 
     plotter = RealtimePlotter()
 
-    '''
-    fig, ax = plt.subplots()
-    x = np.linspace(0, 2*np.pi, 1000)
-    line, = ax.plot(x, np.sin(x))
-
-    line.set_ydata([np.nan] * len(x))
-
-    ani = FuncAnimation(
-            fig,
-            animate,
-            interval=20,
-            blit=True,
-            cache_frame_data=False)
-
-    '''
     thread = Thread(target=threadfun, args=(plotter, ))
     thread.daemon = True
     thread.start()

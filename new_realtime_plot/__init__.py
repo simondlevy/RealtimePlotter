@@ -4,9 +4,6 @@ from matplotlib.animation import FuncAnimation
 from threading import Thread
 from time import sleep
 
-def animate(i):
-    pass
-
 
 class RealtimePlotter:
 
@@ -20,12 +17,16 @@ class RealtimePlotter:
 
         self.ani = FuncAnimation(
                 fig,
-                animate,
+                self._animate,
                 interval=20,
                 blit=True,
                 cache_frame_data=False)
 
 
     def start(self):
-
         plt.show()
+
+    def _animate(self, i):
+        pass
+
+
