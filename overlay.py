@@ -15,8 +15,6 @@ GNU General Public License for more details.
 '''
 
 import numpy as np
-from threading import Thread
-from time import sleep
 
 from realtime_plot import RealtimePlotter
 
@@ -33,18 +31,6 @@ class DataSource:
         self.i += 1
         return sin, cos
 
-def threadfun(plotter):
-
-    i = 0
-
-    x = np.linspace(0, 2*np.pi, 100)
-
-    while True:
-        plotter.set_ydata(0, np.sin(x + i))
-        plotter.set_ydata(1, np.cos(x + i))
-        i += 1
-        sleep(0.1)
-
 
 def main():
 
@@ -55,12 +41,6 @@ def main():
             yticks=[(-1, 0, +1)],
             styles=('r--', 'b-'),
             legend=('sin', 'cos'))
-
-    '''
-    thread = Thread(target=threadfun, args=(plotter,))
-    thread.daemon = True
-    thread.start()
-    '''
 
     plotter.start()
 

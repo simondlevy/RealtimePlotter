@@ -114,6 +114,8 @@ class RealtimePlotter:
         # Set up handler for window-close events
         self.fig.canvas.mpl_connect('close_event', self._handle_close)
 
+        self.sleepsec = interval_msec / 1000
+
         self.running = True
 
     def start(self):
@@ -126,7 +128,7 @@ class RealtimePlotter:
 
         plt.show()
 
-    def set_ydata(self, row, ydata):
+    def _set_ydata(self, row, ydata):
 
         if self.lines[row] is None:
             k = row if len(self.axes) > 1 else 0
@@ -135,8 +137,8 @@ class RealtimePlotter:
 
         self.lines[row].set_ydata(ydata)
 
-        #if self.legend is not None:
-        #    plt.legend(self.legend, loc='upper right')
+        if self.legend is not None:
+            plt.legend(self.legend, loc='upper right')
 
     def _threadfun(self):
 
@@ -144,9 +146,9 @@ class RealtimePlotter:
 
             for row, vals in enumerate(self.source.read()):
 
-                self.set_ydata(row, vals)
+                self._set_ydata(row, vals)
 
-            sleep(.01)
+            sleep(self.sleepsec)
 
     def _handle_close(self, _):
         self.running = False
