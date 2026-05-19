@@ -1,8 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-from threading import Thread
-from time import sleep
 
 
 class RealtimePlotter:
@@ -37,7 +35,7 @@ class RealtimePlotter:
         self.legends = self._check_param(nrows, legends, 'legends', [])
 
 
-        self.fig, self.axes = plt.subplots()
+        self.fig, self.axes = plt.subplots(nrows)
         x = np.linspace(0, 2*np.pi, 1000)
         self.line, = self.axes.plot(x, np.sin(x))
 
