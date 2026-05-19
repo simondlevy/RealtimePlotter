@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
@@ -37,10 +36,6 @@ class RealtimePlotter:
         self.fig, self.axes = plt.subplots(nrows)
 
         self.line = None
-
-        #x = np.linspace(0, 2*np.pi, 1000)
-        #self.line, = self.axes.plot(x, np.sin(x))
-        #self.line.set_ydata([np.nan] * len(x))
 
         self.ani = FuncAnimation(
                 self.fig,
