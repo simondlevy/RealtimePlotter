@@ -37,7 +37,7 @@ def threadfun(plotter):
 def main():
 
     plotter = RealtimePlotter(
-            [(-1, +1)],
+            ((-1, +1), ),
             window_name='Sine and Cosine',
             yticks=[(-1, 0, +1)],
             styles=('r--', 'b-'),

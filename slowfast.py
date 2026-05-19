@@ -37,12 +37,12 @@ def threadfun(plotter):
 
 def main():
 
-    plotter = RealtimePlotter(((-1,+1), (-1,+1)),
-                show_yvals=True,
-                window_name='Sinewave demo',
-                yticks = [(-1,0,+1),(-1,0,+1)],
-                ylabels=['Slow', 'Fast'])
-
+    plotter = RealtimePlotter(
+            ((-1, +1), (-1, +1)),
+            show_yvals=True,
+            window_name='Sinewave demo',
+            yticks=[(-1, 0, +1), (-1, 0, +1)],
+            ylabels=['Slow', 'Fast'])
 
     thread = Thread(target=threadfun, args=(plotter, ))
     thread.daemon = True
@@ -52,6 +52,3 @@ def main():
 
 
 main()
-
-
-

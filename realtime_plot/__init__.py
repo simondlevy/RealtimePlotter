@@ -110,13 +110,12 @@ class RealtimePlotter:
                            if show_yvals else [])
 
         # If we don't assign the result of the function, we won't see anything!
-        self.ani = animation.FuncAnimation(self.fig, self._animate,
-                                      interval=interval_msec, blit=True,
-                                      cache_frame_data=False)
+        self.ani = animation.FuncAnimation(
+                self.fig, self._animate, interval=interval_msec, blit=True,
+                cache_frame_data=False)
 
         # Set up handler for window-close events
         self.fig.canvas.mpl_connect('close_event', self._handle_close)
-
 
     def start(self):
         '''
@@ -128,8 +127,8 @@ class RealtimePlotter:
 
         if self.lines[row] is None:
             k = row if len(self.axes) > 1 else 0
-            self.lines[row], = self.axes[k].plot(ydata, 
-                    'b' if self.styles is None else self.styles[row])
+            self.lines[row], = self.axes[k].plot(
+                    ydata, 'b' if self.styles is None else self.styles[row])
 
         self.lines[row].set_ydata(ydata)
 
@@ -140,5 +139,4 @@ class RealtimePlotter:
         pass
 
     def _animate(self, t):
-
-        return
+        pass
