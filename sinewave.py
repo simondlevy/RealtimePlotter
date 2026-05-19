@@ -9,7 +9,7 @@ from time import sleep
 from new_realtime_plot import RealtimePlotter
 
 
-def threadfun(line):
+def threadfun(line, plotter):
 
     i = 0
 
@@ -32,6 +32,8 @@ def animate(i):
 
 def main():
 
+    plotter = RealtimePlotter()
+
     fig, ax = plt.subplots()
     x = np.linspace(0, 2*np.pi, 1000)
     line, = ax.plot(x, np.sin(x))
@@ -45,7 +47,7 @@ def main():
             blit=True,
             cache_frame_data=False)
 
-    thread = Thread(target=threadfun, args=(line,))
+    thread = Thread(target=threadfun, args=(line, plotter))
     thread.daemon = True
     thread.start()
 
