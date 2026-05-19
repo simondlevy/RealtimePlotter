@@ -37,14 +37,14 @@ class RealtimePlotter:
         self.legends = self._check_param(nrows, legends, 'legends', [])
 
 
-        fig, ax = plt.subplots()
+        self.fig, self.axes = plt.subplots()
         x = np.linspace(0, 2*np.pi, 1000)
-        self.line, = ax.plot(x, np.sin(x))
+        self.line, = self.axes.plot(x, np.sin(x))
 
         self.line.set_ydata([np.nan] * len(x))
 
         self.ani = FuncAnimation(
-                fig,
+                self.fig,
                 self._animate,
                 interval=20,
                 blit=True,
