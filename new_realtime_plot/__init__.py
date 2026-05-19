@@ -34,12 +34,13 @@ class RealtimePlotter:
         yticks = self._check_param(nrows, yticks, 'yticks', [])
         self.legends = self._check_param(nrows, legends, 'legends', [])
 
-
         self.fig, self.axes = plt.subplots(nrows)
-        x = np.linspace(0, 2*np.pi, 1000)
-        self.line, = self.axes.plot(x, np.sin(x))
 
-        self.line.set_ydata([np.nan] * len(x))
+        self.line = None
+
+        #x = np.linspace(0, 2*np.pi, 1000)
+        #self.line, = self.axes.plot(x, np.sin(x))
+        #self.line.set_ydata([np.nan] * len(x))
 
         self.ani = FuncAnimation(
                 self.fig,
@@ -52,9 +53,12 @@ class RealtimePlotter:
     def start(self):
         plt.show()
 
-    def set_ydata(self, data):
+    def set_ydata(self, ydata):
 
-        self.line.set_ydata(data)
+        if self.line is None:
+            self.line, = self.axes.plot(ydata)
+
+        self.line.set_ydata(ydata)
 
     def _check_param(self, nrows, propvals, propname, dflt):
         retval = [dflt]*nrows
