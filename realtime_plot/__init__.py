@@ -83,21 +83,6 @@ class RealtimePlotter:
         # Set line styles
         self.styles = styles
 
-
-        '''
-        for j in range(len(styles)):
-            style = styles[j]
-            ax = self.axes[j]
-            legend = self.legends[j] if len(self.legends) > 0 else None
-            stylesForRow = style if isinstance(style, tuple) else [style]
-            for k in range(len(stylesForRow)):
-                label = legend[k] if legend and len(legend) > 0 else ''
-                self.lines.append(ax.plot(self.x, y, stylesForRow[k],
-                                          animated=True, label=label)[0])
-            if legend is not None and len(legend) > 0:
-                ax.legend()
-        '''
-
         # Create baselines, initially hidden
         self.baselines = [axis.plot(self.x, y, 'k', animated=True)[0]
                           for axis in self.axes]
