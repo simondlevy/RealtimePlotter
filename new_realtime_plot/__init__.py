@@ -58,6 +58,9 @@ class RealtimePlotter:
                            for axis, ylim in zip(self.axes, ylims)]
                            if show_yvals else [])
 
+        # Add properties as specified
+        [axis.set_ylabel(ylabel) for axis, ylabel in zip(self.axes, ylabels)]
+
         self.window_name = ('RealtimePlotter' if window_name is None
                             else window_name)
 
