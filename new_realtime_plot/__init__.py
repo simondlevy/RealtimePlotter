@@ -64,6 +64,10 @@ class RealtimePlotter:
         # Set axis limits
         [axis.set_ylim(ylim) for axis, ylim in zip(self.axes, ylims)]
 
+        # Set ticks and gridlines
+        [axis.yaxis.set_ticks(ytick) for axis, ytick in zip(self.axes, yticks)]
+        [axis.yaxis.grid(True if yticks else False) for axis in self.axes]
+
         self.window_name = ('RealtimePlotter' if window_name is None
                             else window_name)
 
