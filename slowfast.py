@@ -1,10 +1,23 @@
 #!/usr/bin/python3
+'''
+Real-time plot demo using sine waves of two different frequencies.
+
+Copyright (C) 2016 Simon D. Levy
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+'''
 
 import numpy as np
 from threading import Thread
 from time import sleep
 
-# from new_realtime_plot import RealtimePlotter
 from realtime_plot import RealtimePlotter
 
 

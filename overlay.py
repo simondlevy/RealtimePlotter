@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Real-time plot demo using overlain sine waves.
+Real-time plot demo using overlain sine and cosine waves.
 
 Copyright (C) 2016 Simon D. Levy
 
@@ -14,10 +14,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 '''
 
-from realtime_plot import RealtimePlotter
 import numpy as np
 from threading import Thread
 from time import sleep
+
+from realtime_plot import RealtimePlotter
+
 
 def threadfun(plotter):
 
@@ -31,15 +33,17 @@ def threadfun(plotter):
         i += 1
         sleep(0.1)
 
+
 def main():
 
-    plotter = RealtimePlotter([(-1,+1)], 
-                window_name='Sine and Cosine',
-                yticks = [(-1,0,+1)],
-                styles = ('r--', 'b-'),
-                legend = ('sin', 'cos'))
+    plotter = RealtimePlotter(
+            [(-1, +1)],
+            window_name='Sine and Cosine',
+            yticks=[(-1, 0, +1)],
+            styles=('r--', 'b-'),
+            legend=('sin', 'cos'))
 
-    thread = Thread(target=threadfun, args = (plotter,))
+    thread = Thread(target=threadfun, args=(plotter,))
     thread.daemon = True
     thread.start()
 
@@ -47,4 +51,3 @@ def main():
 
 
 main()
- 
