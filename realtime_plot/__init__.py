@@ -51,7 +51,6 @@ class RealtimePlotter:
         nlines = len(styles)
 
         # Bozo filters
-        #styles = self._check_param(nrows, styles, 'styles', 'b-')
         ylabels = self._check_param(nrows, ylabels, 'ylabels', '')
         yticks = self._check_param(nrows, yticks, 'yticks', [])
         self.legends = self._check_param(nrows, legends, 'legends', [])
@@ -138,9 +137,8 @@ class RealtimePlotter:
     def set_ydata(self, row, ydata):
 
         if self.lines[row] is None:
-            self.lines[row], = (self.axes[row].plot(ydata)
-                                if len(self.axes) > 1
-                                else self.axes[0].plot(ydata))
+            k = row if len(self.axes) > 1 else 0
+            self.lines[row], = self.axes[k].plot(ydata)
 
         self.lines[row].set_ydata(ydata)
 

@@ -16,9 +16,9 @@ def threadfun(plotter):
 
     while True:
 
-        plotter.set_ydata(0, np.sin(x + i / 10.0))
+        plotter.set_ydata(0, np.sin(x + i))
 
-        plotter.set_ydata(1, np.sin(x + i / 2.0))
+        plotter.set_ydata(1, np.sin(x + i/100))
 
         i += 1
 
