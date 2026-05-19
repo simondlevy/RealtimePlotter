@@ -48,7 +48,7 @@ class RealtimePlotter:
         nrows = len(ylims)
 
         # Signal (line) count is provided by styles
-        nlines = len(styles)
+        nlines = nrows if styles is None else len(styles)
 
         # Bozo filters
         ylabels = self._check_param(nrows, ylabels, 'ylabels', '')
@@ -138,7 +138,8 @@ class RealtimePlotter:
 
         if self.lines[row] is None:
             k = row if len(self.axes) > 1 else 0
-            self.lines[row], = self.axes[k].plot(ydata, self.styles[row])
+            self.lines[row], = self.axes[k].plot(ydata, 
+                    'b' if self.styles is None else self.styles[row])
 
         self.lines[row].set_ydata(ydata)
 

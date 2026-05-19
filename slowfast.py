@@ -31,7 +31,6 @@ def main():
                 show_yvals=True,
                 window_name='Sinewave demo',
                 yticks = [(-1,0,+1),(-1,0,+1)],
-                styles = ['r--', 'b-'], 
                 ylabels=['Slow', 'Fast'])
 
 
