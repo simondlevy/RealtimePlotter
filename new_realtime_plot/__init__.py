@@ -9,3 +9,7 @@ class RealtimePlotter:
     def __init__(self):
 
         pass
+
+    def start(self):
+
+        plt.show()

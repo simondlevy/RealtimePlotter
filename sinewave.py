@@ -51,7 +51,7 @@ def main():
     thread.daemon = True
     thread.start()
 
-    plt.show()
+    plotter.start()
 
 
 main()
