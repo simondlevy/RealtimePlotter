@@ -24,7 +24,7 @@ class RealtimePlotter:
     should run on its own thread, to prevent blocking / slowdown.
     '''
 
-    def __init__(self, ylims, size=100, phaselims=None, show_yvals=False,
+    def __init__(self, ylims, size=100, show_yvals=False,
                  window_name='Realtime Plotter', styles=None, ylabels=None,
                  legend=None, yticks=[], interval_msec=20):
         '''
@@ -32,11 +32,10 @@ class RealtimePlotter:
         pairs; e.g., [(-1,+1), (0.,5)].  Optional parameters are:
 
         size             size of display (X axis) in arbitrary time steps
-        phaselims        xlim,ylim for phase plot
         show_yvals       display Y values in plot if True
         window_name      name to display at the top of the figure
         styles           plot styles (e.g., 'b-', 'r.'; default='b-')
-        legend          list of legend for each subplot
+        legend           legend for each subplot (tuple or list)
         yticks           Y-axis tick / grid positions
         interval_msec    animation update in milliseconds
 
@@ -59,16 +58,9 @@ class RealtimePlotter:
 
         # Set up subplots
         self.axes = [None]*nrows
-        ncols = 2 if phaselims else 1
         self.sideline = None
-        if phaselims:
-            side = plt.subplot(1, 2, 1)
-            side.set_aspect('equal')
-            self.sideline = side.plot(y, y, 'o', animated=True)
-            side.set_xlim(phaselims[0])
-            side.set_ylim(phaselims[1])
         for k in range(nrows):
-            self.axes[k] = plt.subplot(nrows, ncols, ncols*(k+1))
+            self.axes[k] = plt.subplot(nrows, 1, k+1)
 
         ylabels = [] if ylabels is None else ylabels
 
