@@ -52,6 +52,10 @@ class RealtimePlotter:
     def start(self):
         plt.show()
 
+    def set_ydata(self, data):
+
+        self.line.set_ydata(data)
+
     def _check_param(self, nrows, propvals, propname, dflt):
         retval = [dflt]*nrows
         if propvals:
