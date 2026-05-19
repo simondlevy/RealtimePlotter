@@ -23,7 +23,7 @@ def threadfun(plotter):
 
     i = 0
 
-    x = np.linspace(0, 2*np.pi, 1000)
+    x = np.linspace(0, 2*np.pi, 100)
 
     while True:
 
