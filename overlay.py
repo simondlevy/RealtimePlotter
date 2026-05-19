@@ -26,13 +26,9 @@ def threadfun(plotter):
     x = np.linspace(0, 2*np.pi, 100)
 
     while True:
-
         plotter.set_ydata(0, np.sin(x + i))
-
         plotter.set_ydata(1, np.cos(x + i))
-
         i += 1
-
         sleep(0.1)
 
 def main():

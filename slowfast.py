@@ -12,17 +12,14 @@ def threadfun(plotter):
 
     i = 0
 
-    x = np.linspace(0, 2*np.pi, 1000)
+    x = np.linspace(0, 2*np.pi, 100)
 
     while True:
 
-        plotter.set_ydata(0, np.sin(x + i))
-
-        plotter.set_ydata(1, np.sin(x + i/100))
-
+        plotter.set_ydata(0, np.sin(x + i/4))
+        plotter.set_ydata(1, np.sin(x + i))
         i += 1
-
-        sleep(0.02)
+        sleep(0.1)
 
 
 def main():
