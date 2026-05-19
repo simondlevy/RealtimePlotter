@@ -1,4 +1,4 @@
-<img src="animation.gif" width=500>
+<img src="animation.webm" width=500>
 
 # RealtimePlotter
 Real-time scrolling multi-plot

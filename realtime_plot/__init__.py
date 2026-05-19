@@ -114,6 +114,10 @@ class RealtimePlotter:
                                       interval=interval_msec, blit=True,
                                       cache_frame_data=False)
 
+        # Set up handler for window-close events
+        self.fig.canvas.mpl_connect('close_event', self._handle_close)
+
+
     def start(self):
         '''
         Starts the realtime plotter.
@@ -132,33 +136,9 @@ class RealtimePlotter:
         if self.legend is not None:
             plt.legend(self.legend, loc='upper right')
 
+    def _handle_close(self, _):
+        pass
+
     def _animate(self, t):
 
         return
-
-        values = self.getValues()
-
-        if values is None:
-
-            self.fig.canvas.manager.set_window_title('Waiting for data ...')
-
-        else:
-
-            yvals = values[2:] if self.sideline else values
-
-            for k, text in enumerate(self.axis_texts):
-                text.set_text('%+f' % yvals[k])
-
-            for row, line in enumerate(self.lines, start=1):
-                RealtimePlotter.rolly(line, yvals[row-1])
-
-            if self.sideline:
-                sideline = self.sideline[0]
-                RealtimePlotter.rollx(sideline, values[0])
-                RealtimePlotter.rolly(sideline, values[1])
-
-        # Animation function must return everything we want to animate
-        return ((self.sideline if self.sideline is not None else []) +
-                self.lines + [baseline for baseline, flag in
-                              zip(self.baselines, self.baseflags) if flag] +
-                self.axis_texts)
