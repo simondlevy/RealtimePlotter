@@ -18,14 +18,11 @@ def threadfun(plotter):
         data = np.sin(x + i / 10.0)
  
         plotter.set_ydata(0, data)
+        plotter.set_ydata(1, data)
 
         i += 1
 
         sleep(0.02)
-
-
-def animate(i):
-    pass
 
 
 def main():
