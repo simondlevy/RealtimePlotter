@@ -58,6 +58,9 @@ class RealtimePlotter:
                            for axis, ylim in zip(self.axes, ylims)]
                            if show_yvals else [])
 
+        self.window_name = ('RealtimePlotter' if window_name is None
+                            else window_name)
+
         self.ani = FuncAnimation(
                 self.fig,
                 self._animate,
@@ -78,6 +81,8 @@ class RealtimePlotter:
 
         for k, text in enumerate(self.axis_texts):
             text.set_text('%+f' % ydata[k])
+
+        self.fig.canvas.manager.set_window_title(self.window_name)
 
     def _check_param(self, nrows, propvals, propname, dflt):
         retval = [dflt]*nrows
