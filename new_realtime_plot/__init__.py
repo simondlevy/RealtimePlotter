@@ -20,8 +20,8 @@ from matplotlib.animation import FuncAnimation
 class RealtimePlotter:
 
     def __init__(self, ylims,  size=100, phaselims=None, show_yvals=False,
-                 window_name=None, styles=None, ylabels=None, yticks=[],
-                 legends=[], interval_msec=20):
+                 window_name='Realtime Plotter', styles=None, ylabels=None,
+                 yticks=[], legends=[], interval_msec=20):
         '''
         Initializes a multi-plot with specified Y-axis limits as a list of
         pairs; e.g., [(-1,+1), (0.,5)].  Optional parameters are:
@@ -48,7 +48,9 @@ class RealtimePlotter:
         yticks = self._check_param(nrows, yticks, 'yticks', [])
         self.legends = self._check_param(nrows, legends, 'legends', [])
 
-        self.fig, self.axes = plt.subplots(nrows)
+        fig, self.axes = plt.subplots(nrows)
+
+        fig.canvas.manager.set_window_title(window_name)
 
         self.lines = [None] * nrows
 
@@ -71,11 +73,8 @@ class RealtimePlotter:
         [axis.yaxis.set_ticks(ytick) for axis, ytick in zip(self.axes, yticks)]
         [axis.yaxis.grid(True if yticks else False) for axis in self.axes]
 
-        self.window_name = ('RealtimePlotter' if window_name is None
-                            else window_name)
-
         self.ani = FuncAnimation(
-                self.fig,
+                fig,
                 self._animate,
                 interval=20,
                 blit=True,
@@ -95,8 +94,6 @@ class RealtimePlotter:
 
         for k, text in enumerate(self.axis_texts):
             text.set_text('%+f' % ydata[k])
-
-        self.fig.canvas.manager.set_window_title(self.window_name)
 
     def _check_param(self, nrows, propvals, propname, dflt):
         retval = [dflt]*nrows
