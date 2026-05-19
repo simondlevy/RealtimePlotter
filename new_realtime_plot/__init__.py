@@ -35,7 +35,7 @@ class RealtimePlotter:
 
         self.fig, self.axes = plt.subplots(nrows)
 
-        self.line = None
+        self.lines = [None] * nrows
 
         self.ani = FuncAnimation(
                 self.fig,
@@ -48,12 +48,12 @@ class RealtimePlotter:
     def start(self):
         plt.show()
 
-    def set_ydata(self, ydata):
+    def set_ydata(self, row, ydata):
 
-        if self.line is None:
-            self.line, = self.axes.plot(ydata)
+        if self.lines[row] is None:
+            self.lines[row], = self.axes[row].plot(ydata)
 
-        self.line.set_ydata(ydata)
+        self.lines[row].set_ydata(ydata)
 
     def _check_param(self, nrows, propvals, propname, dflt):
         retval = [dflt]*nrows

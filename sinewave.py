@@ -17,7 +17,7 @@ def threadfun(plotter):
 
         data = np.sin(x + i / 10.0)
  
-        plotter.set_ydata(data)
+        plotter.set_ydata(0, data)
 
         i += 1
 
@@ -30,7 +30,7 @@ def animate(i):
 
 def main():
 
-    plotter = RealtimePlotter( ((-1,+1),) )
+    plotter = RealtimePlotter(((-1,+1), (-1,+1)))
 
     thread = Thread(target=threadfun, args=(plotter, ))
     thread.daemon = True
