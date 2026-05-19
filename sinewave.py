@@ -6,13 +6,27 @@ from matplotlib.animation import FuncAnimation
 from threading import Thread
 from time import sleep
 
-def threadfun():
+
+def threadfun(line):
+
+    i = 0
+
+    x = np.linspace(0, 2*np.pi, 1000)
+
     while True:
-        sleep(0)
+
+        data = np.sin(x + i / 10.0)
+ 
+        line.set_ydata(data)
+
+        i += 1
+
+        sleep(0.02)
 
 
-def animate(i, line, x):
-    line.set_ydata(np.sin(x + i / 10.0))  
+def animate(i):
+    pass
+
 
 def main():
 
@@ -20,19 +34,18 @@ def main():
     x = np.linspace(0, 2*np.pi, 1000)
     line, = ax.plot(x, np.sin(x))
 
-    thread = Thread(target=threadfun)
-    thread.daemon = True
-    thread.start()
-
     line.set_ydata([np.nan] * len(x))
 
     ani = FuncAnimation(
             fig,
             animate,
-            fargs=(line, x),
             interval=20,
             blit=True,
             cache_frame_data=False)
+
+    thread = Thread(target=threadfun, args=(line,))
+    thread.daemon = True
+    thread.start()
 
     plt.show()
 
