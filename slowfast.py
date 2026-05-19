@@ -4,7 +4,8 @@ import numpy as np
 from threading import Thread
 from time import sleep
 
-from new_realtime_plot import RealtimePlotter
+# from new_realtime_plot import RealtimePlotter
+from realtime_plot import RealtimePlotter
 
 
 def threadfun(plotter):

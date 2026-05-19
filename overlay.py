@@ -16,48 +16,34 @@ GNU General Public License for more details.
 
 from realtime_plot import RealtimePlotter
 import numpy as np
+from threading import Thread
+from time import sleep
 
-# Simple example with threading
+def threadfun(plotter):
 
-class _SinePlotter(RealtimePlotter):
+    i = 0
 
-    def __init__(self):
-
-        RealtimePlotter.__init__(self, [(-1,+1)], 
-                window_name='Sine and Cosine',
-                yticks = [(-1,0,+1)],
-                styles = [('r--', 'b-')],
-                legends = [('sin', 'cos')])
-
-        self.xcurr = 0
-
-    def getValues(self):
-
-        return self._getWave(np.sin), self._getWave(np.cos)
-
-    def _getWave(self, fun):
-
-        size = len(self.x)
-        
-        return fun(2*np.pi*(float(self.xcurr)%size)/size)
-
-
-def _update(plotter):
-
-    from time import sleep
+    x = np.linspace(0, 2*np.pi, 1000)
 
     while True:
 
-        plotter.xcurr += 1
-        sleep(.002)
+        plotter.set_ydata(0, np.sin(x + i / 10.0))
+
+        plotter.set_ydata(1, np.sin(x + i / 2.0))
+
+        i += 1
+
+        sleep(0.02)
 
 if __name__ == '__main__':
 
-    import threading
+    plotter = RealtimePlotter([(-1,+1)], 
+                window_name='Sine and Cosine',
+                yticks = [(-1,0,+1)],
+                styles = ('r--', 'b-'),
+                legends = [('sin', 'cos')])
 
-    plotter = _SinePlotter()
-
-    thread = threading.Thread(target=_update, args = (plotter,))
+    thread = Thread(target=threadfun, args = (plotter,))
     thread.daemon = True
     thread.start()
 

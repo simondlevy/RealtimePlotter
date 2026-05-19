@@ -18,33 +18,15 @@ import matplotlib.animation as animation
 import numpy as np
 
 
-class RealtimePlotter(object):
+class RealtimePlotter:
     '''
     Real-time scrolling multi-plot over time.  Your data-acquisition code
     should run on its own thread, to prevent blocking / slowdown.
     '''
 
-    def _check_param(self, nrows, propvals, propname, dflt):
-        retval = [dflt]*nrows
-        if propvals:
-            if len(propvals) != nrows:
-                raise Exception('Provided %d ylims but %d %s' %
-                                (nrows, len(propvals), propname))
-            else:
-                retval = propvals
-        return retval
-
-    def handleClose(self, event):
-        '''
-        Automatically called when user closes plot window.
-        Override to do you own shutdown.
-        '''
-
-        self.is_open = False
-
     def __init__(self, ylims, size=100, phaselims=None, show_yvals=False,
-                 window_name=None, styles=None, ylabels=None, yticks=[],
-                 legends=[], interval_msec=20):
+                 window_name='Realtime Plotter', styles=None, ylabels=None,
+                 yticks=[], legends=[], interval_msec=20):
         '''
         Initializes a multi-plot with specified Y-axis limits as a list of
         pairs; e.g., [(-1,+1), (0.,5)].  Optional parameters are:
@@ -65,8 +47,11 @@ class RealtimePlotter(object):
         # Row count is provided by Y-axis limits
         nrows = len(ylims)
 
+        # Signal (line) count is provided by styles
+        nlines = len(styles)
+
         # Bozo filters
-        styles = self._check_param(nrows, styles, 'styles', 'b-')
+        #styles = self._check_param(nrows, styles, 'styles', 'b-')
         ylabels = self._check_param(nrows, ylabels, 'ylabels', '')
         yticks = self._check_param(nrows, yticks, 'yticks', [])
         self.legends = self._check_param(nrows, legends, 'legends', [])
@@ -89,15 +74,18 @@ class RealtimePlotter(object):
             side.set_ylim(phaselims[1])
         for k in range(nrows):
             self.axes[k] = plt.subplot(nrows, ncols, ncols*(k+1))
-        self.window_name = ('RealtimePlotter' if window_name is None
-                            else window_name)
 
-        # Set up handler for window-close events
-        self.fig.canvas.mpl_connect('close_event', self.handleClose)
-        self.is_open = True
+        # Set window name
+        self.fig.canvas.manager.set_window_title(window_name)
 
         # Create lines
-        self.lines = []
+        self.lines = [None] * nlines
+
+        # Set line styles
+        self.styles = styles
+
+
+        '''
         for j in range(len(styles)):
             style = styles[j]
             ax = self.axes[j]
@@ -109,6 +97,7 @@ class RealtimePlotter(object):
                                           animated=True, label=label)[0])
             if legend is not None and len(legend) > 0:
                 ax.legend()
+        '''
 
         # Create baselines, initially hidden
         self.baselines = [axis.plot(self.x, y, 'k', animated=True)[0]
@@ -129,36 +118,31 @@ class RealtimePlotter(object):
         # Hide X axis ticks and labels for now
         [axis.xaxis.set_visible(False) for axis in self.axes]
 
-        # Allow interval specification
-        self.interval_msec = interval_msec
-
         # Add axis text if indicated
         self.axis_texts = ([axis.text(0.8, ylim[1] - .1 * (ylim[1] - ylim[0]),
                                       '')
                            for axis, ylim in zip(self.axes, ylims)]
                            if show_yvals else [])
 
+        # If we don't assign the result of the function, we won't see anything!
+        self.ani = animation.FuncAnimation(self.fig, self._animate,
+                                      interval=interval_msec, blit=True,
+                                      cache_frame_data=False)
+
     def start(self):
         '''
         Starts the realtime plotter.
         '''
+        plt.show()
 
-        # If we don't assign the result of the function, we won't see anything!
-        ani = animation.FuncAnimation(self.fig, self._animate,
-                                      interval=self.interval_msec, blit=True,
-                                      cache_frame_data=False)
+    def set_ydata(self, row, ydata):
 
-        try:
-            plt.show()
-        except Exception as e:
-            print(e)
+        if self.lines[row] is None:
+            self.lines[row], = (self.axes[row].plot(ydata)
+                                if len(self.axes) > 1
+                                else self.axes[0].plot(ydata))
 
-    def getValues(self):
-        '''
-        Override this method to return actual Y values at current time.
-        '''
-
-        return None
+        self.lines[row].set_ydata(ydata)
 
     def showBaseline(self, axid, value):
         '''
@@ -188,23 +172,19 @@ class RealtimePlotter(object):
 
             raise Exception('Axis index must be in [0,%d)' % nrows)
 
-    @classmethod
-    def roll(cls, getter, setter, line, newval):
-        data = getter(line)
-        data = np.roll(data, -1)
-        data[-1] = newval
-        line.set_ydata(data)
-        setter(data)
-
-    @classmethod
-    def rollx(cls, line, newval):
-        RealtimePlotter.roll(line.get_xdata, line.set_xdata, line, newval)
-
-    @classmethod
-    def rolly(cls, line, newval):
-        RealtimePlotter.roll(line.get_ydata, line.set_ydata, line, newval)
+    def _check_param(self, nrows, propvals, propname, dflt):
+        retval = [dflt]*nrows
+        if propvals:
+            if len(propvals) != nrows:
+                raise Exception('Provided %d ylims but %d %s' %
+                                (nrows, len(propvals), propname))
+            else:
+                retval = propvals
+        return retval
 
     def _animate(self, t):
+
+        return
 
         values = self.getValues()
 
@@ -213,8 +193,6 @@ class RealtimePlotter(object):
             self.fig.canvas.manager.set_window_title('Waiting for data ...')
 
         else:
-
-            self.fig.canvas.manager.set_window_title(self.window_name)
 
             yvals = values[2:] if self.sideline else values
 

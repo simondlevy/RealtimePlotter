@@ -18,6 +18,10 @@ from matplotlib.animation import FuncAnimation
 
 
 class RealtimePlotter:
+    '''
+    Real-time scrolling multi-plot over time.  Your data-acquisition code
+    should run on its own thread, to prevent blocking / slowdown.
+    '''
 
     def __init__(self, ylims,  size=100, phaselims=None, show_yvals=False,
                  window_name='Realtime Plotter', styles=None, ylabels=None,
@@ -48,20 +52,12 @@ class RealtimePlotter:
         yticks = self._check_param(nrows, yticks, 'yticks', [])
         self.legends = self._check_param(nrows, legends, 'legends', [])
 
-        fig, self.axes = plt.subplots(nrows)
-
-        fig.canvas.manager.set_window_title(window_name)
-
         self.lines = [None] * nrows
 
         # Set line styles
         self.styles = styles
 
-        # Add axis text if indicated
-        self.axis_texts = ([axis.text(0.8, ylim[1] - .1 * (ylim[1] - ylim[0]),
-                                      '')
-                           for axis, ylim in zip(self.axes, ylims)]
-                           if show_yvals else [])
+        self.axes = [plt.subplot(nrows, 1, k+1) for k in range(nrows)]
 
         # Add properties as specified
         [axis.set_ylabel(ylabel) for axis, ylabel in zip(self.axes, ylabels)]
@@ -73,12 +69,19 @@ class RealtimePlotter:
         [axis.yaxis.set_ticks(ytick) for axis, ytick in zip(self.axes, yticks)]
         [axis.yaxis.grid(True if yticks else False) for axis in self.axes]
 
-        self.ani = FuncAnimation(
-                fig,
-                self._animate,
-                interval=20,
-                blit=True,
-                cache_frame_data=False)
+        # Add axis text if indicated
+        self.axis_texts = ([axis.text(0.8, ylim[1] - .1 * (ylim[1] - ylim[0]),
+                                      '')
+                           for axis, ylim in zip(self.axes, ylims)]
+                           if show_yvals else [])
+
+        fig = plt.gcf()
+
+        fig.canvas.manager.set_window_title(window_name)
+
+
+        self.ani = FuncAnimation(fig, self._animate, interval=20, blit=True,
+                                 cache_frame_data=False)
 
 
     def start(self):
