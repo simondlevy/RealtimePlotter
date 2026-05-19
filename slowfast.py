@@ -18,6 +18,7 @@ import numpy as np
 
 from realtime_plot import RealtimePlotter
 
+
 class DataSource:
 
     def __init__(self):
