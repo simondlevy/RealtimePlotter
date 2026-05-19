@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 from threading import Thread
-from time import sleep
+import time
 
 
 class RealtimePlotter:
@@ -148,7 +148,7 @@ class RealtimePlotter:
 
                 self._set_ydata(row, vals)
 
-            sleep(self.sleepsec)
+            time.sleep(self.sleepsec)
 
     def _handle_close(self, _):
         self.running = False
