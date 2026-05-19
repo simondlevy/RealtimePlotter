@@ -52,6 +52,9 @@ class RealtimePlotter:
 
         self.lines = [None] * nrows
 
+        # Set line styles
+        self.styles = styles
+
         # Add axis text if indicated
         self.axis_texts = ([axis.text(0.8, ylim[1] - .1 * (ylim[1] - ylim[0]),
                                       '')
@@ -85,7 +88,8 @@ class RealtimePlotter:
     def set_ydata(self, row, ydata):
 
         if self.lines[row] is None:
-            self.lines[row], = self.axes[row].plot(ydata)
+            self.lines[row], = self.axes[row].plot(ydata,
+                    'b' if self.styles is None else self.styles[row])
 
         self.lines[row].set_ydata(ydata)
 
