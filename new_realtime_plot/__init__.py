@@ -52,6 +52,12 @@ class RealtimePlotter:
 
         self.lines = [None] * nrows
 
+        # Add axis text if indicated
+        self.axis_texts = ([axis.text(0.8, ylim[1] - .1 * (ylim[1] - ylim[0]),
+                                      '')
+                           for axis, ylim in zip(self.axes, ylims)]
+                           if show_yvals else [])
+
         self.ani = FuncAnimation(
                 self.fig,
                 self._animate,
@@ -69,6 +75,9 @@ class RealtimePlotter:
             self.lines[row], = self.axes[row].plot(ydata)
 
         self.lines[row].set_ydata(ydata)
+
+        for k, text in enumerate(self.axis_texts):
+            text.set_text('%+f' % ydata[k])
 
     def _check_param(self, nrows, propvals, propname, dflt):
         retval = [dflt]*nrows
