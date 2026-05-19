@@ -26,7 +26,7 @@ class RealtimePlotter:
 
     def __init__(self, ylims, size=100, phaselims=None, show_yvals=False,
                  window_name='Realtime Plotter', styles=None, ylabels=None,
-                 yticks=[], legends=[], interval_msec=20):
+                 legend=None, yticks=[], interval_msec=20):
         '''
         Initializes a multi-plot with specified Y-axis limits as a list of
         pairs; e.g., [(-1,+1), (0.,5)].  Optional parameters are:
@@ -36,8 +36,8 @@ class RealtimePlotter:
         show_yvals       display Y values in plot if True
         window_name      name to display at the top of the figure
         styles           plot styles (e.g., 'b-', 'r.'; default='b-')
+        legend          list of legend for each subplot
         yticks           Y-axis tick / grid positions
-        legends          list of legends for each subplot
         interval_msec    animation update in milliseconds
 
         For overlaying plots, use a tuple for styles; e.g.,
@@ -50,11 +50,7 @@ class RealtimePlotter:
         # Signal (line) count is provided by styles
         nlines = nrows if styles is None else len(styles)
 
-        # Bozo filters
-        ylabels = self._check_param(nrows, ylabels, 'ylabels', '')
-        yticks = self._check_param(nrows, yticks, 'yticks', [])
-        self.legends = self._check_param(nrows, legends, 'legends', [])
-
+        # Create an empyt figure
         self.fig = plt.gcf()
 
         # X values are arbitrary ascending; Y is initially zero
@@ -74,6 +70,8 @@ class RealtimePlotter:
         for k in range(nrows):
             self.axes[k] = plt.subplot(nrows, ncols, ncols*(k+1))
 
+        ylabels = [] if ylabels is None else ylabels
+
         # Set window name
         self.fig.canvas.manager.set_window_title(window_name)
 
@@ -82,6 +80,9 @@ class RealtimePlotter:
 
         # Set line styles
         self.styles = styles
+
+        # Set up legend
+        self.legend = legend
 
         # Create baselines, initially hidden
         self.baselines = [axis.plot(self.x, y, 'k', animated=True)[0]
@@ -128,6 +129,9 @@ class RealtimePlotter:
 
         self.lines[row].set_ydata(ydata)
 
+        if self.legend is not None:
+            plt.legend(self.legend, loc='upper right')
+
     def showBaseline(self, axid, value):
         '''
         Shows a baseline of specified value for specified row of this
@@ -155,16 +159,6 @@ class RealtimePlotter:
         if axid < 0 or axid >= nrows:
 
             raise Exception('Axis index must be in [0,%d)' % nrows)
-
-    def _check_param(self, nrows, propvals, propname, dflt):
-        retval = [dflt]*nrows
-        if propvals:
-            if len(propvals) != nrows:
-                raise Exception('Provided %d ylims but %d %s' %
-                                (nrows, len(propvals), propname))
-            else:
-                retval = propvals
-        return retval
 
     def _animate(self, t):
 

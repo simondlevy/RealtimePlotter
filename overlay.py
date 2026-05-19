@@ -37,7 +37,7 @@ def main():
                 window_name='Sine and Cosine',
                 yticks = [(-1,0,+1)],
                 styles = ('r--', 'b-'),
-                legends = [('sin', 'cos')])
+                legend = ('sin', 'cos'))
 
     thread = Thread(target=threadfun, args = (plotter,))
     thread.daemon = True
