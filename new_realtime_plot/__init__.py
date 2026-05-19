@@ -7,7 +7,7 @@ from time import sleep
 
 class RealtimePlotter:
 
-    def __init__(self):
+    def __init__(self, ylims):
 
         fig, ax = plt.subplots()
         x = np.linspace(0, 2*np.pi, 1000)

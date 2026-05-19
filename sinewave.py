@@ -32,7 +32,7 @@ def animate(i):
 
 def main():
 
-    plotter = RealtimePlotter()
+    plotter = RealtimePlotter( ((-1,+1),) )
 
     thread = Thread(target=threadfun, args=(plotter, ))
     thread.daemon = True
