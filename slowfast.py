@@ -20,6 +20,17 @@ from time import sleep
 
 from realtime_plot import RealtimePlotter
 
+class DataSource:
+
+    def __init__(self):
+        self.i = 0
+        self.x = np.linspace(0, 2*np.pi, 100)
+
+    def read(self):
+        slow = 0, np.sin(self.x + self.i/4)
+        fast = 1, np.sin(self.x + self.i)
+        self.i += 1
+        return slow, fast
 
 def threadfun(plotter):
 
@@ -38,6 +49,7 @@ def threadfun(plotter):
 def main():
 
     plotter = RealtimePlotter(
+            DataSource(),
             ((-1, +1), (-1, +1)),
             show_yvals=True,
             window_name='Sinewave demo',

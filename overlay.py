@@ -21,6 +21,18 @@ from time import sleep
 from realtime_plot import RealtimePlotter
 
 
+class DataSource:
+
+    def __init__(self):
+        self.i = 0
+        self.x = np.linspace(0, 2*np.pi, 100)
+
+    def read(self):
+        sin = np.sin(self.x + self.i/4)
+        cos = np.cos(self.x + self.i/4)
+        self.i += 1
+        return sin, cos
+
 def threadfun(plotter):
 
     i = 0
@@ -37,6 +49,7 @@ def threadfun(plotter):
 def main():
 
     plotter = RealtimePlotter(
+            DataSource,
             ((-1, +1), ),
             window_name='Sine and Cosine',
             yticks=[(-1, 0, +1)],

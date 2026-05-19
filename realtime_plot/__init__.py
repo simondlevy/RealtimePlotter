@@ -16,6 +16,8 @@ GNU General Public License for more details.
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
+from threading import Thread
+from time import sleep
 
 
 class RealtimePlotter:
@@ -24,7 +26,7 @@ class RealtimePlotter:
     should run on its own thread, to prevent blocking / slowdown.
     '''
 
-    def __init__(self, ylims, size=100, show_yvals=False,
+    def __init__(self, source, ylims, size=100, show_yvals=False,
                  window_name='Realtime Plotter', styles=None, ylabels=None,
                  legend=None, yticks=[], interval_msec=20):
         '''
@@ -42,6 +44,8 @@ class RealtimePlotter:
         For overlaying plots, use a tuple for styles; e.g.,
         styles=[('r','g'), 'b']
         '''
+
+        self.source = source
 
         # Row count is provided by Y-axis limits
         nrows = len(ylims)
@@ -62,6 +66,7 @@ class RealtimePlotter:
         for k in range(nrows):
             self.axes[k] = plt.subplot(nrows, 1, k+1)
 
+        # Turn unspecified Y-axis labels into empty list
         ylabels = [] if ylabels is None else ylabels
 
         # Set window name
@@ -106,13 +111,18 @@ class RealtimePlotter:
                 self.fig, self._animate, interval=interval_msec, blit=True,
                 cache_frame_data=False)
 
-        # Set up handler for window-close events
+        # Set up handler for window-close events (currently unused)
         self.fig.canvas.mpl_connect('close_event', self._handle_close)
 
     def start(self):
         '''
         Starts the realtime plotter.
         '''
+
+        thread = Thread(target=self._threadfun)
+        thread.daemon = True
+        thread.start()
+
         plt.show()
 
     def set_ydata(self, row, ydata):
@@ -126,6 +136,12 @@ class RealtimePlotter:
 
         if self.legend is not None:
             plt.legend(self.legend, loc='upper right')
+
+    def _threadfun(self):
+
+        while True:
+            data = self.source.read()
+            sleep(.01)
 
     def _handle_close(self, _):
         pass
