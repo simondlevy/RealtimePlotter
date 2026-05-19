@@ -6,6 +6,8 @@ from matplotlib.animation import FuncAnimation
 from threading import Thread
 from time import sleep
 
+from new_realtime_plot import RealtimePlotter
+
 
 def threadfun(line):
 
