@@ -36,6 +36,7 @@ class RealtimePlotter:
         show_yvals       display Y values in plot if True
         window_name      name to display at the top of the figure
         styles           plot styles (e.g., 'b-', 'r.'; default='b-')
+        ylabels          Y-axis labels
         legend           legend for each subplot (tuple or list)
         yticks           Y-axis tick / grid positions
         interval_msec    animation update in milliseconds
