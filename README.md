@@ -14,6 +14,6 @@ thread.
 Install in the usual way:
 
 ```
-  pip3 install -e .
+pip3 install -e .
 ```
 
