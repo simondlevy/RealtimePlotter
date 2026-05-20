@@ -137,6 +137,10 @@ class RealtimePlotter:
         if self.legend is not None:
             plt.legend(self.legend, loc='upper right')
 
+        texts = self.axis_texts
+        if len(texts) > 0:
+            texts[row].set_text('%+f' % ydata[-1])
+
     def _threadfun(self):
 
         while self.running:
