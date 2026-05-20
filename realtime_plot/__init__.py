@@ -17,7 +17,6 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 from threading import Thread
-import time
 
 
 class RealtimePlotter:
@@ -114,8 +113,6 @@ class RealtimePlotter:
         # Set up handler for window-close events
         self.fig.canvas.mpl_connect('close_event', self._handle_close)
 
-        self.sleepsec = interval_msec / 1000
-
         self.running = True
 
     def start(self):
@@ -147,8 +144,6 @@ class RealtimePlotter:
             for row, vals in enumerate(self.source.read()):
 
                 self._set_ydata(row, vals)
-
-            time.sleep(self.sleepsec)
 
     def _handle_close(self, _):
         self.running = False

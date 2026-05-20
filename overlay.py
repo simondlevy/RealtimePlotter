@@ -15,6 +15,7 @@ GNU General Public License for more details.
 '''
 
 import numpy as np
+import time
 
 from realtime_plot import RealtimePlotter
 
@@ -29,6 +30,7 @@ class DataSource:
         sin = np.sin(self.x + self.i/4)
         cos = np.cos(self.x + self.i/4)
         self.i += 1
+        time.sleep(.05)  # delay to simulate data acquisition
         return sin, cos
 
 
