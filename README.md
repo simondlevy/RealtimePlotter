@@ -11,3 +11,9 @@ Calling the ```start()``` method of the RealtimePlotter object launches the
 plot, calling the ```read()``` method of your data-source object on a separate
 thread.  
 
+Install in the usual way:
+
+```
+  pip3 install -e .
+```
+
