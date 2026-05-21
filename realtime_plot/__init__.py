@@ -140,7 +140,7 @@ class RealtimePlotter:
 
         texts = self.axis_texts
         if len(texts) > 0:
-            texts[row].set_text('%+f' % ydata[-1])
+            texts[row].set_text('%+3.3f' % ydata[-1])
 
     def _threadfun(self):
 
